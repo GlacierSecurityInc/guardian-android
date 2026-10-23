@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    android:allowBackup="false" already blocks cloud backup and `adb backup`, so the
+    <cloud-backup> block below is belt-and-braces. The Android 12+ device-transfer (D2D) path is
+    the one that matters: it is governed by these rules, and Android documents that some OEM
+    builds honour <device-transfer> even when allowBackup is false.
+
+    These rules are an ALLOWLIST: `<include domain="sharedpref"/>` only. Under Android's
+    semantics, naming any <include> restricts extraction to exactly what is named, so the file,
+    external, root and database domains are excluded by omission. In particular the `history`
+    database (account rows, message and SMS bodies, the FTS copy of every message body, OMEMO
+    session/prekey state, voicemail metadata, and location history) is never copied to a new
+    device.
+
+    It deliberately is NOT a deny-list of excludes: that would silently admit the file domain,
+    which holds voicemail audio and received media under getFilesDir(), and widen the transfer
+    surface while appearing to narrow it.
+
+    Leaving out the database also avoids a copy that would arrive partly unreadable. The
+    WireGuard config, the OMEMO identity key and the account password / FAST token are sealed
+    with device-bound Android Keystore keys that do not migrate. The supported way to move data
+    between devices is the app's own encrypted export/import, which re-derives its key from a
+    user passphrase.
+
+    The four sharedpref files excluded below are Keystore-wrapped credential stores and the Tink
+    keysets behind EncryptedSharedPreferences. Their contents are inert on another device, and
+    carrying a keyset whose master key stayed behind is exactly the corruption case
+    EncryptedPreferencesHelper.wipeCorruptedStore() exists to recover from. What remains eligible
+    is ordinary app settings, which is the part users actually want carried across.
+-->
+<data-extraction-rules>
+    <cloud-backup disableIfNoEncryptionCapabilities="true">
+        <include domain="sharedpref" />
+        <exclude domain="sharedpref" path="glacier_keystore_creds.xml" />
+        <exclude domain="sharedpref" path="secret_shared_prefs.xml" />
+        <exclude domain="sharedpref" path="__androidx_security_crypto_encrypted_prefs_keyset__.xml" />
+        <exclude domain="sharedpref" path="__androidx_security_crypto_master_key_keyset__.xml" />
+    </cloud-backup>
+    <device-transfer>
+        <include domain="sharedpref" />
+        <exclude domain="sharedpref" path="glacier_keystore_creds.xml" />
+        <exclude domain="sharedpref" path="secret_shared_prefs.xml" />
+        <exclude domain="sharedpref" path="__androidx_security_crypto_encrypted_prefs_keyset__.xml" />
+        <exclude domain="sharedpref" path="__androidx_security_crypto_master_key_keyset__.xml" />
+    </device-transfer>
+</data-extraction-rules>

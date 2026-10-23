@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Onboarding — modernized permissions wall. Granted only as each feature is
+  used; icon-tile rows matching the Core Connection confirm-dialog style,
+  single "Allow & continue" CTA.
+-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/relativeLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/cc_bg"
+    android:fitsSystemWindows="true">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            style="@style/BlackToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="?attr/actionBarSize" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/app_bar_layout"
+        android:fillViewport="true"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingHorizontal="24dp"
+            android:paddingBottom="24dp">
+
+            <TextView
+                style="@style/OnboardingHeroTitle"
+                android:text="@string/permissions_glacier_needs_title" />
+
+            <TextView
+                style="@style/OnboardingHeroSubtitle"
+                android:text="@string/permissions_glacier_needs_subtitle" />
+
+            <!-- Microphone -->
+            <LinearLayout style="@style/OnboardingCardRow" android:layout_marginTop="28dp">
+
+                <FrameLayout style="@style/OnboardingCardIconTile">
+
+                    <ImageView
+                        style="@style/OnboardingCardIcon"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_perm_phone_msg_black_24dp"
+                        app:tint="@color/cc_accent" />
+
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="14dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/OnboardingCardTitle"
+                        android:text="@string/perm_title_microphone" />
+
+                    <TextView
+                        style="@style/OnboardingCardDescription"
+                        android:text="@string/perm_desc_microphone" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- Camera -->
+            <LinearLayout style="@style/OnboardingCardRow">
+
+                <FrameLayout style="@style/OnboardingCardIconTile">
+
+                    <ImageView
+                        style="@style/OnboardingCardIcon"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_perm_camera_mic_black_24dp"
+                        app:tint="@color/cc_accent" />
+
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="14dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/OnboardingCardTitle"
+                        android:text="@string/perm_title_camera" />
+
+                    <TextView
+                        style="@style/OnboardingCardDescription"
+                        android:text="@string/perm_desc_camera" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- Photos & files -->
+            <LinearLayout style="@style/OnboardingCardRow">
+
+                <FrameLayout style="@style/OnboardingCardIconTile">
+
+                    <ImageView
+                        style="@style/OnboardingCardIcon"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_perm_media_black_24dp"
+                        app:tint="@color/cc_accent" />
+
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="14dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/OnboardingCardTitle"
+                        android:text="@string/perm_title_photos_files" />
+
+                    <TextView
+                        style="@style/OnboardingCardDescription"
+                        android:text="@string/perm_desc_photos_files" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- Phone -->
+            <LinearLayout style="@style/OnboardingCardRow">
+
+                <FrameLayout style="@style/OnboardingCardIconTile">
+
+                    <ImageView
+                        style="@style/OnboardingCardIcon"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_call"
+                        app:tint="@color/cc_accent" />
+
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="14dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/OnboardingCardTitle"
+                        android:text="@string/perm_title_phone" />
+
+                    <TextView
+                        style="@style/OnboardingCardDescription"
+                        android:text="@string/perm_desc_phone" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- Location (optional) -->
+            <LinearLayout style="@style/OnboardingCardRow">
+
+                <FrameLayout style="@style/OnboardingCardIconTile">
+
+                    <ImageView
+                        style="@style/OnboardingCardIcon"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_my_location"
+                        app:tint="@color/cc_accent" />
+
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="14dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/OnboardingCardTitle"
+                            android:layout_width="wrap_content"
+                            android:text="@string/perm_title_location" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:background="@drawable/cc_pill_badge_bg"
+                            android:paddingHorizontal="6dp"
+                            android:paddingVertical="2dp"
+                            android:text="@string/perm_optional_badge"
+                            android:textColor="@color/cc_muted"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        style="@style/OnboardingCardDescription"
+                        android:text="@string/perm_desc_location" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/cont_perm"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="28dp"
+                android:background="@drawable/bg_btn_primary"
+                android:backgroundTint="@null"
+                app:backgroundTint="@null"
+                android:fontFamily="@font/neue_haas_grotesk"
+                android:gravity="center"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:onClick="continuePerm"
+                android:text="@string/allow_and_continue"
+                android:textAllCaps="false"
+                android:textColor="@color/text_color"
+                android:textStyle="bold"
+                app:cornerRadius="14dp" />
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</RelativeLayout>

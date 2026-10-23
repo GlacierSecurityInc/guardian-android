@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+
+    >
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/sms_profiles_drawer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        tools:openDrawer="end"
+        android:layout_gravity="end">
+
+
+
+
+
+
+
+        <RelativeLayout
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true"
+            android:orientation="vertical"
+            android:background="?attr/color_background_primary">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_alignParentTop="true"
+                android:id="@+id/toolbars_glacier"
+                >
+
+            <com.google.android.material.appbar.AppBarLayout
+                android:id="@+id/toolbar_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <com.google.android.material.appbar.MaterialToolbar style="@style/BlackToolbarPhone"
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="?attr/actionBarSize"
+                    app:titleCentered="false" />
+            </com.google.android.material.appbar.AppBarLayout>
+            <include  android:id="@+id/twilio_error"
+                layout="@layout/toolbar_twilio"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:visibility="gone"
+                />
+            <include  android:id="@+id/offline_layout"
+                layout="@layout/toolbar_connection"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:visibility="gone"
+                />
+            <include  android:id="@+id/console_error"
+                layout="@layout/toolbar_console"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:visibility="gone"
+                />
+
+
+
+            <include  android:id="@+id/return_to_external_call"
+                layout="@layout/external_call"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:visibility="gone"
+                />
+            <include
+                android:id="@+id/return_to_glacier_call"
+                layout="@layout/view_incall_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                />
+            </LinearLayout>
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/swipeRefreshLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/toolbars_glacier"
+                android:layout_above="@+id/navigation_phone">
+
+                <FrameLayout
+                    android:id="@+id/fragment_container"
+                    android:name="com.glaciersecurity.glaciermessenger.ui.phone.DialPhoneFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="@dimen/footerBarSize"
+                    android:fillViewport="true"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+            <com.google.android.material.bottomnavigation.BottomNavigationView
+                android:id="@+id/navigation_phone"
+                style="@style/BlackBottomNav"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/footerBarSize"
+                android:layout_alignParentBottom="true"
+                app:itemIconTint="@color/color_state_light"
+                app:itemTextColor="@color/color_state_light"
+                app:menu="@menu/menu_bottom_navigation_phone" />
+        </RelativeLayout>
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|end"
+            android:layout_marginTop="?attr/actionBarSize"
+            app:cardBackgroundColor="?colorSurfaceContainerHighest"
+            app:cardCornerRadius="4dp"
+            app:cardElevation="8dp"
+            app:strokeWidth="0dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="216dp"
+                android:orientation="vertical">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/sms_profiles_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?attr/colorOutlineVariant" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/add_number"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="48dp"
+                    android:gravity="start|center_vertical"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
+                    android:text="@string/add_number"
+                    android:textColor="?attr/colorControlNormal"
+                    android:textSize="16sp"
+                    app:icon="@drawable/ic_add_24dp"
+                    app:iconGravity="textStart"
+                    app:iconPadding="12dp"
+                    app:iconTint="?attr/colorControlNormal" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/release_number"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="48dp"
+                    android:gravity="start|center_vertical"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
+                    android:text="@string/release_number"
+                    android:textColor="?attr/colorControlNormal"
+                    android:textSize="16sp"
+                    app:icon="@drawable/ic_delete_24dp"
+                    app:iconGravity="textStart"
+                    app:iconPadding="12dp"
+                    app:iconTint="?attr/colorControlNormal" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/nickname_number"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="48dp"
+                    android:gravity="start|center_vertical"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
+                    android:text="@string/nickname_number"
+                    android:textColor="?attr/colorControlNormal"
+                    android:textSize="16sp"
+                    app:icon="@drawable/ic_edit_24dp"
+                    app:iconGravity="textStart"
+                    app:iconPadding="12dp"
+                    app:iconTint="?attr/colorControlNormal"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/no_numbers"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="48dp"
+                    android:gravity="start|center_vertical"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
+                    android:text="@string/no_sms_numbers_assigned"
+                    android:textColor="?attr/colorControlNormal"
+                    android:textSize="16sp"
+                    app:icon="@drawable/baseline_contact_support_24"
+                    app:iconGravity="textStart"
+                    app:iconPadding="12dp"
+                    app:iconTint="?attr/colorControlNormal"/>
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+    </androidx.drawerlayout.widget.DrawerLayout>
+
+
+</layout>

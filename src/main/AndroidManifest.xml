@@ -1,0 +1,640 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission android:name="android.permission.USE_BIOMETRIC" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VISUAL_USER_SELECTED" />
+    <!-- Legacy write access for pre-scoped-storage devices (no effect on API 29+). -->
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28" />
+    <!-- minSdk is 30 (scoped storage always on); READ_MEDIA_* above covers our actual
+         media access. Strip this out wherever a merged dependency declares it. -->
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        tools:node="remove" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!-- Required on API 37+ (Android 17) for direct/Jingle candidates that open sockets on the local network. -->
+    <uses-permission android:name="android.permission.ACCESS_LOCAL_NETWORK" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
+
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SYSTEM_EXEMPTED" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CAMERA" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_PHONE_CALL" />
+    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.READ_PROFILE" />
+
+    <!-- this foreground service type permission is exclusively used for import and export backup -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+
+    <uses-permission android:name="android.permission.MANAGE_OWN_CALLS" />
+    <!-- Used directly by StepperWizard/ExternalCallActivity for call state checks; declare
+         it ourselves instead of relying on a dependency's manifest to bring it in. -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
+    <uses-permission android:name="com.glaciersecurity.glaciermessenger.ACCESS_SECRETS"/>
+
+    <uses-feature
+        android:name="android.hardware.location"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.location.gps"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.location.network"
+        android:required="false" />
+
+    <permission android:name="${applicationId}.ACCESS_SECRETS"
+        android:label="signature permissions"
+        android:protectionLevel="signature" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera.autofocus"
+        android:required="false" />
+
+    <uses-feature
+        android:name="android.hardware.microphone"
+        android:required="false" />
+
+    <queries>
+        <package android:name="org.sufficientlysecure.keychain" />
+        <package android:name="com.wireguard.android" />
+
+        <intent>
+            <action android:name="com.glaciersecurity.glaciermessenger.location.request" />
+        </intent>
+        <intent>
+            <action android:name="com.glaciersecurity.glaciermessenger.location.show" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+        </intent>
+        <intent>
+            <action android:name="org.unifiedpush.android.connector.MESSAGE" />
+        </intent>
+    </queries>
+
+    <permission
+        android:name="com.glaciersecurity.glaciermessenger.permission.EXTERNAL_CALL"
+        android:protectionLevel="signature"
+        android:label="Glacier External Call" />
+
+    <permission
+        android:name="com.glaciersecurity.glaciermessenger.PUSH_PERMISSION"
+        android:protectionLevel="signature"
+        android:label="Glacier Push Permission" />
+
+    <application
+        android:name=".GlacierGuardian"
+        android:allowBackup="false"
+        android:appCategory="social"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:enableOnBackInvokedCallback="true"
+        android:fullBackupContent="@xml/backup_content"
+        android:hardwareAccelerated="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:largeHeap="true"
+        android:localeConfig="@xml/locales_config"
+        android:networkSecurityConfig="@xml/network_security_configuration"
+        android:taskAffinity="com.glaciersecurity.glaciermessenger"
+        android:theme="@style/AppTheme"
+        tools:targetApi="tiramisu">
+
+        <meta-data
+            android:name="firebase_analytics_collection_deactivated"
+            android:value="true" />
+
+        <!-- The warning that systemExempted requires alarm permission is incorrect because doze white list is sufficient -->
+        <service
+            android:name="com.glaciersecurity.glaciermessenger.services.XmppConnectionService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse|systemExempted|microphone|camera"
+            tools:ignore="ForegroundServicePermission">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="xmpp-im" />
+        </service>
+
+        <service
+            android:name=".services.LocationService"
+            android:foregroundServiceType="location"
+            android:enabled="true" />
+
+        <service
+            android:name=".services.SecurityHubService"
+            android:enabled="true"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.LocationPermissionActivity"
+            android:exported="false" />
+
+        <service
+            android:name="com.wireguard.android.backend.GoBackend$VpnService"
+            android:exported="true"
+            android:permission="android.permission.BIND_VPN_SERVICE"
+            tools:replace="android:exported">
+            <intent-filter>
+                <action android:name="android.net.VpnService" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".services.CoreConnectionTileService"
+            android:exported="true"
+            android:icon="@drawable/ic_glacier_brand"
+            android:label="@string/core_quick_tile_label"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.service.quicksettings.ACTIVITY"
+                android:value="com.glaciersecurity.glaciermessenger.ui.CoreConnectionActivity" />
+        </service>
+
+        <service
+            android:name="androidx.work.impl.foreground.SystemForegroundService"
+            android:foregroundServiceType="dataSync"
+            tools:node="merge" />
+
+
+        <service
+            android:name="com.glaciersecurity.glaciermessenger.conversations.services.ImportBackupService"
+            android:exported="false"
+            android:foregroundServiceType="dataSync" />
+        <service
+            android:name="com.glaciersecurity.glaciermessenger.services.CallIntegrationConnectionService"
+            android:exported="true"
+            android:permission="android.permission.BIND_TELECOM_CONNECTION_SERVICE">
+            <intent-filter>
+                <action android:name="android.telecom.ConnectionService" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".services.IncomingCallNotificationService"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="phoneCall|microphone|camera">
+            <intent-filter>
+                <action android:name="ACTION_ACCEPT" />
+                <action android:name="ACTION_REJECT" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".services.CallForegroundService"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="phoneCall" />
+
+        <service
+            android:name=".services.JingleCallForegroundService"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="phoneCall" />
+
+        <!-- [START fcm_listener] -->
+        <!-- FCM only delivers MESSAGING_EVENT to a single manifest-declared service, so
+             Twilio Voice, Twilio Conversations, and the XMPP server push wake-up all share
+             this one listener instead of each declaring their own (see FcmListenerService). -->
+        <service
+            android:name=".services.FcmListenerService"
+            android:exported="false"
+            android:stopWithTask="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        <!-- [END fcm_listener] -->
+
+        <receiver
+            android:name="com.glaciersecurity.glaciermessenger.receiver.SystemEventReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+                <action
+                    android:name="android.net.conn.CONNECTIVITY_CHANGE"
+                    tools:ignore="BatteryLife" />
+                <action android:name="android.intent.action.ACTION_SHUTDOWN" />
+                <action android:name="android.media.RINGER_MODE_CHANGED" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name=".services.BootCompletedReceiver"
+            android:enabled="true"
+            android:exported="false"
+            android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name="com.glaciersecurity.glaciermessenger.receiver.UnifiedPushDistributor"
+            android:enabled="false"
+            android:exported="true"
+            android:permission="com.glaciersecurity.glaciermessenger.PUSH_PERMISSION">
+            <intent-filter>
+                <action android:name="org.unifiedpush.android.distributor.REGISTER" />
+                <action android:name="org.unifiedpush.android.distributor.UNREGISTER" />
+                <action android:name="org.unifiedpush.android.distributor.feature.BYTES_MESSAGE" />
+                <action android:name="org.unifiedpush.android.distributor.feature.MESSENGER" />
+                <action android:name="org.unifiedpush.android.distributor.feature.APP_VALIDATION" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_FULLY_REMOVED" />
+                <data android:scheme="package" />
+            </intent-filter>
+        </receiver>
+        <activity
+            android:name="com.glaciersecurity.glaciermessenger.ui.ShareLocationActivity"
+            android:label="@string/title_activity_share_location" />
+        <activity
+            android:name="com.glaciersecurity.glaciermessenger.ui.DNSActivity"
+            android:label="@string/title_activity_next_dns" />
+        <activity
+            android:name=".ui.CoreConnectionActivity"
+            android:exported="true"
+            android:label="@string/core_connect" />
+        <activity
+            android:name="com.glaciersecurity.glaciermessenger.ui.SearchActivity"
+            android:label="@string/search_messages"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="com.glaciersecurity.glaciermessenger.ui.RecordingActivity"
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/AppTheme.RecordingDialog" />
+        <activity
+            android:name="com.glaciersecurity.glaciermessenger.ui.ShowLocationActivity"
+            android:label="@string/title_activity_show_location" />
+        <activity
+            android:name="com.glaciersecurity.glaciermessenger.ui.PdfViewerActivity"
+            android:exported="false"
+            android:label="@string/title_activity_pdf_viewer" />
+        <activity
+            android:name="com.glaciersecurity.glaciermessenger.ui.MediaViewerActivity"
+            android:label="@string/title_activity_media_viewer" />
+        <activity
+            android:name="com.glaciersecurity.glaciermessenger.ui.TextViewerActivity"
+            android:label="@string/title_activity_text_viewer" />
+        <activity
+            android:name=".ui.ExternalCallActivity"
+            android:exported="true"
+            android:label="@string/call_activity_title"
+            android:launchMode="singleTask"
+            android:permission="com.glaciersecurity.glaciermessenger.permission.EXTERNAL_CALL"
+            android:showWhenLocked="true"
+            android:turnScreenOn="true"
+            android:windowSoftInputMode="stateHidden">
+            <intent-filter>
+                <action android:name="android.intent.action.HEADSET_PLUG" />
+                <action android:name="android.bluetooth.headset.profile.action.CONNECTION_STATE_CHANGED" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.glaciersecurity.glaciermessenger.ui.ConversationActivity"
+            android:exported="true"
+            android:theme="@style/Theme.App.Starting">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.glaciersecurity.glaciermessenger.ui.ConversationsActivity"
+            android:launchMode="singleTask"
+            android:minWidth="300dp"
+            android:minHeight="300dp"
+            android:windowSoftInputMode="stateHidden" />
+
+        <activity
+            android:name=".ui.PurchaseNumberActivity"
+            android:label="@string/purchase_number"
+            android:parentActivityName=".ui.PhoneModuleActivity" />
+
+        <activity
+            android:name=".ui.ChangeStatusActivity"
+            android:label="@string/my_status"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="com.glaciersecurity.glaciermessenger.ui.ScanActivity"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name="com.glaciersecurity.glaciermessenger.ui.FileSafeActivity"
+            android:label="@string/title_activity_file_safe"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name=".ui.ExternalContactDetailsActivity"
+            android:label="Contact Details"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".ui.SmsConvActivity"
+            android:label="@string/conversation"
+            android:parentActivityName=".ui.PhoneModuleActivity" />
+
+        <activity
+            android:name="com.glaciersecurity.glaciermessenger.ui.ExternalXmppLinkActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="xmpp" />
+            </intent-filter>
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="https" />
+                <data android:host="glaciersec.cc" />
+                <data android:pathPrefix="/i/" />
+                <data android:pathPrefix="/j/" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SENDTO" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:scheme="imto" />
+                <data android:host="jabber" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SENDTO" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:scheme="imto" />
+                <data android:host="xmpp" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.glaciersecurity.glaciermessenger.ui.UriHandlerActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="xmpp" />
+            </intent-filter>
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="https" />
+                <data android:host="glaciersec.cc" />
+                <data android:pathPrefix="/i/" />
+                <data android:pathPrefix="/j/" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SENDTO" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:scheme="imto" />
+                <data android:host="jabber" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SENDTO" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:scheme="imto" />
+                <data android:host="xmpp" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.glaciersecurity.glaciermessenger.ui.StartConversationActivity"
+            android:exported="true"
+            android:label="@string/title_activity_new_chat"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.glaciersecurity.glaciermessenger.ui.SettingsActivity"
+            android:exported="false"
+            android:label="@string/title_activity_settings" />
+        <activity-alias
+            android:name="com.glaciersecurity.glaciermessenger.ui.NotificationPreferencesActivity"
+            android:exported="true"
+            android:label="@string/title_activity_settings"
+            android:targetActivity="com.glaciersecurity.glaciermessenger.ui.SettingsActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.NOTIFICATION_PREFERENCES" />
+            </intent-filter>
+        </activity-alias>
+        <activity
+            android:name="com.glaciersecurity.glaciermessenger.ui.ChooseContactActivity"
+            android:label="@string/title_activity_choose_contact" />
+        <activity
+            android:name="com.glaciersecurity.glaciermessenger.ui.BlocklistActivity"
+            android:label="@string/title_activity_block_list" />
+        <activity
+            android:name="com.glaciersecurity.glaciermessenger.ui.ChangePasswordActivity"
+            android:label="@string/change_password_on_server" />
+        <activity
+            android:name="com.glaciersecurity.glaciermessenger.ui.ResetPasswordActivity"
+            android:exported="false"
+            android:label="@string/reset_password_title"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="com.glaciersecurity.glaciermessenger.ui.MfaVerifyActivity"
+            android:exported="false"
+            android:label="@string/mfa_verification_title"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="com.glaciersecurity.glaciermessenger.ui.ChooseAccountForProfilePictureActivity"
+            android:enabled="false"
+            android:exported="true"
+            android:label="@string/choose_account">
+            <intent-filter android:label="@string/set_profile_picture">
+                <action android:name="android.intent.action.ATTACH_DATA" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="image/*" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.glaciersecurity.glaciermessenger.conversations.ui.ShareViaAccountActivity"
+            android:label="@string/title_activity_share_via_account"
+            android:launchMode="singleTop" />
+        <activity
+            android:name="com.glaciersecurity.glaciermessenger.conversations.ui.ManageAccountActivity"
+            android:label="@string/title_activity_manage_accounts"
+            android:launchMode="singleTask" />
+        <activity
+            android:name="com.glaciersecurity.glaciermessenger.conversations.ui.ImportBackupActivity"
+            android:exported="true"
+            android:label="@string/restore_backup"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="application/vnd.glacier.backup" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.glaciersecurity.glaciermessenger.ui.LoginAccountActivity"
+            android:exported="false"
+            android:launchMode="singleTop"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name="com.glaciersecurity.glaciermessenger.ui.MyProfileActivity"
+            android:exported="false"
+            android:launchMode="singleTop"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name="com.glaciersecurity.glaciermessenger.ui.ConferenceDetailsActivity"
+            android:label="@string/action_muc_details"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name="com.glaciersecurity.glaciermessenger.ui.ContactDetailsActivity"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".ui.SecurityHubActivity"
+            android:label="@string/title_activity_security_hub"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name="com.glaciersecurity.glaciermessenger.ui.PublishProfilePictureActivity"
+            android:label="@string/mgmt_account_publish_avatar"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name="com.glaciersecurity.glaciermessenger.ui.PublishGroupChatProfilePictureActivity"
+            android:label="@string/group_chat_avatar" />
+        <activity
+            android:name="com.glaciersecurity.glaciermessenger.ui.ShareWithActivity"
+            android:exported="true"
+            android:launchMode="singleTop">
+
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <action android:name="android.intent.action.SEND_MULTIPLE" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <action android:name="android.intent.action.SEND_MULTIPLE" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="*/*" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
+        </activity>
+        <activity
+            android:name="com.glaciersecurity.glaciermessenger.ui.TrustKeysActivity"
+            android:label="@string/trust_omemo_fingerprints"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name="com.glaciersecurity.glaciermessenger.ui.AboutActivity"
+            android:parentActivityName=".ui.SettingsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.glaciersecurity.glaciermessenger.ui.SettingsActivity" />
+        </activity>
+        <activity
+            android:name="com.canhub.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat" />
+
+        <activity
+            android:name="com.glaciersecurity.glaciermessenger.ui.MediaBrowserActivity"
+            android:label="@string/media_browser" />
+        <activity android:name="com.glaciersecurity.glaciermessenger.ui.AddReactionActivity" />
+        <activity
+            android:name=".ui.StepperWizard"
+            android:label="@string/title_activity_permissions_wizard"/>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.files"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+        <provider
+            android:name="com.glaciersecurity.glaciermessenger.services.BarcodeProvider"
+            android:authorities="${applicationId}.barcodes"
+            android:exported="false"
+            android:grantUriPermissions="true" />
+
+        <activity
+            android:name="com.glaciersecurity.glaciermessenger.ui.ShortcutActivity"
+            android:exported="true"
+            android:label="@string/contact">
+            <intent-filter>
+                <action android:name="android.intent.action.CREATE_SHORTCUT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.glaciersecurity.glaciermessenger.ui.MucUsersActivity"
+            android:label="@string/group_chat_members" />
+        <activity
+            android:name="com.glaciersecurity.glaciermessenger.ui.ChannelDiscoveryActivity"
+            android:label="@string/discover_channels" />
+        <activity
+            android:name="com.glaciersecurity.glaciermessenger.ui.PhoneModuleActivity"
+            android:label="@string/loading_phone_number" />
+        <activity
+            android:name="com.glaciersecurity.glaciermessenger.ui.RtpSessionActivity"
+            android:autoRemoveFromRecents="true"
+            android:launchMode="singleInstance"
+            android:supportsPictureInPicture="true" />
+    </application>
+
+</manifest>

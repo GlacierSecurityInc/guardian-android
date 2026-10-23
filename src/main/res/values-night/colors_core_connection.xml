@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Core Connection — modernized. Dark pair of the design tokens. -->
+<resources>
+    <color name="cc_bg">#000000</color>
+    <color name="cc_surface">#000000</color>
+    <color name="cc_raised">#1C1F27</color>
+    <color name="cc_border">#12FFFFFF</color>
+    <color name="cc_border_strong">#1FFFFFFF</color>
+    <color name="cc_text">#E8EAEF</color>
+    <color name="cc_muted">#9EE8EAEF</color>
+    <color name="cc_dim">#6BE8EAEF</color>
+
+    <color name="cc_accent">#7BA3FF</color>
+    <color name="cc_accent_soft">#247BA3FF</color>
+    <color name="cc_accent_ink">#0D0E12</color>
+    <color name="text_color">#FFFFFF</color>
+
+
+    <color name="cc_green">#3AD17E</color>
+    <color name="cc_green_soft">#213AD17E</color>
+    <color name="cc_green_glow">#333AD17E</color>
+    <color name="cc_on_green">#06140C</color>
+
+    <color name="cc_danger">#E07B6E</color>
+    <color name="cc_danger_soft">#24E07B6E</color>
+    <color name="cc_on_danger">#FFFFFF</color>
+    <color name="cc_amber">#E0B14E</color>
+
+    <color name="cc_disc_on_top">#15301F</color>
+    <color name="cc_disc_on_bottom">#0E1C14</color>
+    <color name="cc_disc_off_top">#1A1D24</color>
+    <color name="cc_disc_off_bottom">#131519</color>
+</resources>

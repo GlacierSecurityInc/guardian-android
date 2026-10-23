@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/home_nav"
+        android:title="@string/content_description_chat_button"
+        android:icon="@drawable/baseline_home_24" />
+
+    <item
+        android:id="@+id/contact_nav"
+        android:title="@string/content_description_contacts"
+        android:icon="@drawable/ic_contacts"/>
+
+    <item
+        android:id="@+id/dialer_nav"
+        android:title="@string/content_description_dialer"
+        android:icon="@drawable/ic_baseline_dialpad_24"/>
+
+    <item
+        android:id="@+id/sms_nav"
+        android:title="@string/content_description_sms_button"
+        android:icon="@drawable/ic_baseline_sms_24" />
+
+    <item
+        android:id="@+id/history_nav"
+        android:title="@string/content_description_history"
+        android:icon="@drawable/ic_baseline_history_24"  />
+
+</menu>

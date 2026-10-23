@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_selectable_list_item"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="4dp"
+        android:paddingEnd="0dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp">
+
+        <!-- FileTile: colored extension badge with status overlay -->
+        <FrameLayout
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="4dp">
+
+            <TextView
+                android:id="@+id/file_ext_tile"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:gravity="center"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.04"
+                android:textAllCaps="true"
+                tools:text="PDF"
+                tools:background="#5a3d4a"
+                tools:textColor="#e2a8be" />
+
+            <ImageView
+                android:id="@+id/status_badge"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_gravity="bottom|end"
+                android:visibility="gone"
+                tools:src="@drawable/ic_check_24dp"
+                tools:visibility="visible" />
+
+        </FrameLayout>
+
+        <!-- Filename row + size -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="12dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/attachment_path"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:singleLine="true"
+                    android:ellipsize="middle"
+                    android:textAppearance="?textAppearanceBodyLarge"
+                    tools:text="Q4-financials-final.pdf" />
+
+                <TextView
+                    android:id="@+id/status_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="4dp"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:fontFeatureSettings="'tnum'"
+                    tools:text="Waiting"
+                    tools:textColor="?android:attr/textColorSecondary" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/attachment_size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:singleLine="true"
+                android:textAppearance="?textAppearanceBodySmall"
+                tools:text="8.2 MB" />
+
+        </LinearLayout>
+
+        <!-- Action button: remove (×) for queued/init, retry for failed, gone for done/uploading -->
+        <ImageButton
+            android:id="@+id/action_button"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="10dp"
+            android:src="@drawable/ic_baseline_close_24"
+            android:contentDescription="@string/upload_filesafe_remove_cd"
+            android:visibility="visible"
+            tools:ignore="ImageContrastCheck" />
+
+    </LinearLayout>
+
+    <!-- Thin indeterminate progress bar shown while IN_PROGRESS -->
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/upload_progress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:visibility="gone"
+        app:trackThickness="4dp"
+        app:indicatorInset="0dp"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        tools:visibility="visible" />
+
+</LinearLayout>

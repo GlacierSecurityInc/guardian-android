@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        android:orientation="vertical">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/app_bar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:elevation="0dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <RelativeLayout
+                    android:id="@+id/avater_layout"
+                    android:layout_width="67dp"
+                    android:layout_height="67dp">
+
+                    <com.makeramen.roundedimageview.RoundedImageView
+                        android:id="@+id/avater"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_centerInParent="true"
+                        android:contentDescription="@string/account_image_description"
+                        app:riv_corner_radius="8dp" />
+
+                    <ImageView
+                        android:id="@+id/details_contactpresence_icon"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_alignRight="@id/avater"
+                        android:layout_alignBottom="@id/avater"
+                        android:layout_marginRight="-6dp"
+                        android:layout_marginBottom="-1dp" />
+
+                </RelativeLayout>
+
+                <com.google.android.material.appbar.MaterialToolbar
+                    style="@style/BlackToolbar"
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@id/avater_layout"
+                    android:minHeight="?attr/actionBarSize">
+
+                    <ImageView
+                        android:id="@+id/statusIcon"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:padding="5dp"
+                        android:visibility="gone" />
+
+                    <LinearLayout
+                        android:id="@+id/details_expand"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:paddingEnd="@dimen/spacing_medium">
+
+                        <ImageButton
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+                            android:backgroundTint="@android:color/transparent"
+                            android:contentDescription="@string/expand"
+                            android:src="@drawable/baseline_expand_more_24" />
+                    </LinearLayout>
+
+                </com.google.android.material.appbar.MaterialToolbar>
+
+            </RelativeLayout>
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <include
+            android:id="@+id/offline_layout"
+            layout="@layout/toolbar_connection"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+
+        <include
+            android:id="@+id/return_to_external_call"
+            layout="@layout/external_call"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+
+        <include
+            android:id="@+id/return_to_glacier_call"
+            layout="@layout/view_incall_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@id/navigation_conversations"
+                android:orientation="horizontal">
+
+                <FrameLayout
+                    android:id="@+id/main_fragment"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1000" />
+
+                <FrameLayout
+                    android:id="@+id/secondary_fragment"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1618" />
+            </LinearLayout>
+
+            <com.google.android.material.bottomnavigation.BottomNavigationView
+                android:id="@+id/navigation_conversations"
+                style="@style/BlackBottomNav"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/footerBarSize"
+                android:layout_alignParentBottom="true"
+                android:layout_gravity="bottom"
+                android:transitionName="bottomNav"
+                app:itemIconTint="@color/color_state_light"
+                app:itemTextColor="@color/color_state_light"
+                app:menu="@menu/menu_bottom_navigation_conversations" />
+
+        </RelativeLayout>
+    </LinearLayout>
+</layout>

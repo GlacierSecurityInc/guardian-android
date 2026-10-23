@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <!-- Drag handle -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingTop="8dp"
+        android:paddingBottom="2dp"
+        android:orientation="vertical">
+        <View
+            android:layout_width="32dp"
+            android:layout_height="4dp"
+            android:background="@drawable/bg_attach_tile"
+            android:backgroundTint="?colorOutlineVariant" />
+    </LinearLayout>
+
+    <!-- Header -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="4dp"
+        android:text="@string/attach_file"
+        android:textAppearance="?textAppearanceTitleMedium"
+        android:textStyle="bold" />
+
+    <!-- Row 1: Location · Audio · Video -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingHorizontal="8dp"
+        android:paddingTop="4dp">
+
+        <!-- Location -->
+        <LinearLayout
+            android:id="@+id/attach_location"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:paddingVertical="10dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?android:selectableItemBackground">
+
+            <FrameLayout
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:background="@drawable/bg_attach_tile"
+                android:backgroundTint="@color/attach_tile_location_bg">
+                <ImageView
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_location_pin_24dp"
+                    app:tint="@color/attach_tile_location_fg" />
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/send_location"
+                android:textSize="12sp"
+                android:fontFamily="@font/neue_haas_grotesk"
+                android:textColor="?colorOnSurface"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Audio / Voice -->
+        <LinearLayout
+            android:id="@+id/attach_record_voice"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:paddingVertical="10dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?android:selectableItemBackground">
+
+            <FrameLayout
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:background="@drawable/bg_attach_tile"
+                android:backgroundTint="@color/attach_tile_audio_bg">
+                <ImageView
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_mic_24dp"
+                    app:tint="@color/attach_tile_audio_fg" />
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/attach_record_voice"
+                android:textSize="12sp"
+                android:fontFamily="@font/neue_haas_grotesk"
+                android:textColor="?colorOnSurface"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Video -->
+        <LinearLayout
+            android:id="@+id/attach_record_video"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:paddingVertical="10dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?android:selectableItemBackground">
+
+            <FrameLayout
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:background="@drawable/bg_attach_tile"
+                android:backgroundTint="@color/attach_tile_video_bg">
+                <ImageView
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_videocam_24dp"
+                    app:tint="@color/attach_tile_video_fg" />
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/attach_record_video"
+                android:textSize="12sp"
+                android:fontFamily="@font/neue_haas_grotesk"
+                android:textColor="?colorOnSurface"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Row 2: Picture (Camera) · Photo (Gallery) · File -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingHorizontal="8dp"
+        android:paddingBottom="16dp">
+
+        <!-- Picture / Camera -->
+        <LinearLayout
+            android:id="@+id/attach_take_picture"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:paddingVertical="10dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?android:selectableItemBackground">
+
+            <FrameLayout
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:background="@drawable/bg_attach_tile"
+                android:backgroundTint="@color/attach_tile_picture_bg">
+                <ImageView
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_camera_alt_24dp"
+                    app:tint="@color/attach_tile_picture_fg" />
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/attach_take_picture"
+                android:textSize="12sp"
+                android:fontFamily="@font/neue_haas_grotesk"
+                android:textColor="?colorOnSurface"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Photo / Gallery -->
+        <LinearLayout
+            android:id="@+id/attach_choose_picture"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:paddingVertical="10dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?android:selectableItemBackground">
+
+            <FrameLayout
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:background="@drawable/bg_attach_tile"
+                android:backgroundTint="@color/attach_tile_photo_bg">
+                <ImageView
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_image_24dp"
+                    app:tint="@color/attach_tile_photo_fg" />
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/attach_choose_picture"
+                android:textSize="12sp"
+                android:fontFamily="@font/neue_haas_grotesk"
+                android:textColor="?colorOnSurface"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- File -->
+        <LinearLayout
+            android:id="@+id/attach_choose_file"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:paddingVertical="10dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?android:selectableItemBackground">
+
+            <FrameLayout
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:background="@drawable/bg_attach_tile"
+                android:backgroundTint="@color/attach_tile_file_bg">
+                <ImageView
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_description_24dp"
+                    app:tint="@color/attach_tile_file_fg" />
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/choose_file"
+                android:textSize="12sp"
+                android:fontFamily="@font/neue_haas_grotesk"
+                android:textColor="?colorOnSurface"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

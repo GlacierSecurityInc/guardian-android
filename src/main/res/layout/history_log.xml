@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+
+    <RelativeLayout
+        android:id="@+id/history_whole"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_margin="5dp"
+        android:gravity="center_vertical"
+        android:layout_toLeftOf="@+id/deleteCheckBoxLayout">
+
+
+        <TextView
+            android:id="@+id/hist_call_time"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="10dp"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:lines="1"
+            android:maxLines="1"
+            android:textColor="?colorControlNormal"
+            android:textSize="13sp"
+            />
+
+
+        <TextView
+            android:id="@+id/hist_direction"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_toLeftOf="@+id/hist_call_time"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="10dp"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:lines="1"
+            android:maxLines="1"
+            android:textColor="?colorControlNormal"
+            android:textSize="13sp"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/hist_status"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_toLeftOf="@+id/hist_direction"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="10dp"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:lines="1"
+            android:maxLines="1"
+            android:textColor="?colorControlNormal"
+            android:textSize="13sp"
+            android:visibility="gone"/>
+        <RelativeLayout
+            android:id="@+id/history_click"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:layout_marginRight="-15dp"
+            >
+
+            <!--            <RelativeLayout-->
+            <!--                android:id="@+id/avatar"-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="match_parent"-->
+            <!--                android:gravity="center">-->
+
+            <!--                <include layout="@layout/contact_avatar" />-->
+
+            <!--            </RelativeLayout>-->
+
+            <ImageView
+                android:id="@+id/icon"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_marginLeft="5dp"
+                android:adjustViewBounds="true"
+                android:padding="7dp" />
+
+            <TextView
+                android:id="@+id/caller"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="?colorControlNormal"
+                app:fontFamily="@font/neue_haas_grotesk"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@id/icon"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                tools:text="Test Caller"
+                android:textStyle="bold" />
+
+        </RelativeLayout>
+
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/deleteCheckBoxLayout"
+        android:layout_width="60dp"
+        android:layout_height="40dp"
+        android:layout_margin="5dp"
+        android:layout_marginEnd="7dp"
+        android:layout_marginStart="7dp"
+        android:layout_alignParentRight="true">
+
+
+        <CheckBox
+            android:id="@+id/deleteCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@drawable/checkbox"
+            android:clickable="true"
+            />
+    </RelativeLayout>
+</RelativeLayout>

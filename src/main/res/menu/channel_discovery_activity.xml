@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_search"
+        android:icon="@drawable/ic_search_24dp"
+        android:title="@string/search"
+        app:actionLayout="@layout/actionview_search"
+        app:showAsAction="collapseActionView|always" />
+
+    <!-- Group 1: navigation -->
+    <group android:id="@+id/overflow_group_nav">
+        <item
+            android:id="@+id/action_accounts"
+            android:icon="@drawable/ic_person_24dp"
+            android:orderInCategory="90"
+            android:title="@string/action_accounts"
+            app:showAsAction="never" />
+    </group>
+
+    <!-- Group 2: app settings -->
+    <group android:id="@+id/overflow_group_settings">
+        <item
+            android:id="@+id/action_settings"
+            android:icon="@drawable/ic_settings_24dp"
+            android:orderInCategory="100"
+            android:title="@string/action_settings"
+            app:showAsAction="never" />
+    </group>
+
+</menu>

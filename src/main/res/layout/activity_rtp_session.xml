@@ -1,0 +1,464 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?colorSurface"
+        android:fitsSystemWindows="true">
+
+        <LinearLayout
+            android:id="@+id/pip_placeholder"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/black"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <ProgressBar
+                android:id="@+id/pip_waiting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"
+                android:indeterminateOnly="true"
+                android:indeterminateTint="@android:color/white"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/pip_warning"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/ic_warning_24dp"
+                android:visibility="gone"
+                app:tint="@android:color/white" />
+        </LinearLayout>
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/app_bar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:elevation="0dp"
+            android:visibility="visible">
+
+            <com.google.android.material.appbar.MaterialToolbar style="@style/BlackToolbar"
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@android:color/transparent"
+                app:titleTextColor="@android:color/transparent" />
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/button_row"
+            android:layout_below="@id/app_bar_layout">
+
+            <TextView
+                android:id="@+id/state_caption"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="8dp"
+                android:letterSpacing="0.01"
+                android:textAppearance="?textAppearanceLabelLarge"
+                android:textColor="?colorOnSurfaceVariant"
+                tools:text="Incoming Glacier call" />
+
+            <!-- Hero avatar: ambient glow + pulsing tone ring + contact photo -->
+            <RelativeLayout
+                android:id="@+id/avatar_stack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/state_caption"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="28dp">
+
+                <ImageView
+                    android:id="@+id/call_glow"
+                    android:layout_width="@dimen/call_glow_size"
+                    android:layout_height="@dimen/call_glow_size"
+                    android:layout_centerInParent="true"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/bg_call_glow" />
+
+                <View
+                    android:id="@+id/call_ring_outer"
+                    android:layout_width="@dimen/call_hero_avatar_size"
+                    android:layout_height="@dimen/call_hero_avatar_size"
+                    android:layout_centerInParent="true"
+                    android:layout_margin="@dimen/call_avatar_ring_padding"
+                    android:background="@drawable/bg_call_ring"
+                    android:visibility="gone" />
+
+                <View
+                    android:id="@+id/call_ring_inner"
+                    android:layout_width="@dimen/call_hero_avatar_size"
+                    android:layout_height="@dimen/call_hero_avatar_size"
+                    android:layout_centerInParent="true"
+                    android:layout_margin="@dimen/call_avatar_ring_padding"
+                    android:background="@drawable/bg_call_ring"
+                    android:visibility="gone" />
+
+                <com.makeramen.roundedimageview.RoundedImageView
+                    android:id="@+id/contact_photo"
+                    android:layout_width="@dimen/call_hero_avatar_size"
+                    android:layout_height="@dimen/call_hero_avatar_size"
+                    android:layout_centerInParent="true"
+                    app:riv_corner_radius="@dimen/incoming_call_radius" />
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/with"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/avatar_stack"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="24dp"
+                android:layout_marginRight="24dp"
+                android:gravity="center"
+                android:textAppearance="?textAppearanceHeadlineSmall"
+                android:textStyle="bold"
+                tools:text="Juliet Capulet" />
+
+            <TextView
+                android:id="@+id/duration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/with"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/rtp_session_duration_top_margin"
+                android:fontFamily="monospace"
+                android:textAppearance="?textAppearanceTitleLarge"
+                android:textColor="?colorOnSurface"
+                tools:text="01:23" />
+
+            <LinearLayout
+                android:id="@+id/equalizer"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/call_equalizer_height"
+                android:layout_below="@id/duration"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="18dp"
+                android:gravity="bottom"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <View
+                    android:layout_width="@dimen/call_equalizer_bar_width"
+                    android:layout_height="16dp"
+                    android:layout_marginStart="3dp"
+                    android:layout_marginEnd="3dp"
+                    android:background="@drawable/bg_call_eq_bar"
+                    app:tint="?colorPrimary" />
+
+                <View
+                    android:layout_width="@dimen/call_equalizer_bar_width"
+                    android:layout_height="26dp"
+                    android:layout_marginStart="3dp"
+                    android:layout_marginEnd="3dp"
+                    android:background="@drawable/bg_call_eq_bar"
+                    app:tint="?colorPrimary" />
+
+                <View
+                    android:layout_width="@dimen/call_equalizer_bar_width"
+                    android:layout_height="32dp"
+                    android:layout_marginStart="3dp"
+                    android:layout_marginEnd="3dp"
+                    android:background="@drawable/bg_call_eq_bar"
+                    app:tint="?colorPrimary" />
+
+                <View
+                    android:layout_width="@dimen/call_equalizer_bar_width"
+                    android:layout_height="22dp"
+                    android:layout_marginStart="3dp"
+                    android:layout_marginEnd="3dp"
+                    android:background="@drawable/bg_call_eq_bar"
+                    app:tint="?colorPrimary" />
+
+                <View
+                    android:layout_width="@dimen/call_equalizer_bar_width"
+                    android:layout_height="18dp"
+                    android:layout_marginStart="3dp"
+                    android:layout_marginEnd="3dp"
+                    android:background="@drawable/bg_call_eq_bar"
+                    app:tint="?colorPrimary" />
+
+            </LinearLayout>
+
+            <!-- Encrypted chip: small lock glyph + label, shown once verification is known -->
+            <LinearLayout
+                android:id="@+id/encrypted_chip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/equalizer"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/verified"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:layout_marginEnd="6dp"
+                    android:src="@drawable/ic_lock_24dp"
+                    android:visibility="gone"
+                    app:tint="?colorOnSurfaceVariant" />
+
+                <TextView
+                    android:id="@+id/encrypted_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:letterSpacing="0.01"
+                    android:text="@string/call_end_to_end_encrypted"
+                    android:textAppearance="?textAppearanceLabelMedium"
+                    android:textColor="?colorOnSurfaceVariant"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+
+        <LinearLayout
+            android:id="@+id/remote_video_wrapper"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/app_bar_layout"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:background="@android:color/black"
+            android:gravity="center"
+            android:visibility="gone">
+
+            <com.glaciersecurity.glaciermessenger.ui.widget.AspectRatioSurfaceViewRenderer
+                android:id="@+id/remote_video"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/local_video"
+            android:layout_width="@dimen/local_video_preview_width"
+            android:layout_height="@dimen/local_video_preview_height"
+            android:layout_below="@+id/app_bar_layout"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="24dp"
+            android:background="@drawable/bg_call_pip_frame"
+            android:clipToOutline="true"
+            android:visibility="gone">
+
+            <com.glaciersecurity.glaciermessenger.ui.widget.AspectRatioSurfaceViewRenderer
+                android:id="@+id/local_video_surface"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:elevation="0dp" />
+        </FrameLayout>
+
+        <ImageView
+            android:id="@+id/pip_local_mic_off_indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="8dp"
+            android:alpha="0.7"
+            android:src="@drawable/ic_mic_off_24dp"
+            android:visibility="gone"
+            app:tint="@android:color/white" />
+
+        <RelativeLayout
+            android:id="@+id/button_row"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="28dp">
+
+            <!-- Incoming call: full-width Decline / Accept, icon + label -->
+            <LinearLayout
+                android:id="@+id/answer_row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:orientation="horizontal"
+                android:paddingStart="30dp"
+                android:paddingEnd="30dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/reject_call"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_call_end_24dp"
+                        android:visibility="gone"
+                        app:backgroundTint="?colorError"
+                        app:elevation="4dp"
+                        app:fabCustomSize="68dp"
+                        app:maxImageSize="30dp"
+                        app:tint="?colorOnError"
+                        tools:visibility="visible" />
+
+                    <TextView
+                        android:id="@+id/reject_call_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:paddingHorizontal="4dp"
+                        android:textAppearance="?textAppearanceLabelLarge"
+                        android:textColor="?colorOnSurface"
+                        android:visibility="gone"
+                        tools:text="Decline"
+                        tools:visibility="visible" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/accept_call"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_call_24dp"
+                        android:visibility="gone"
+                        app:backgroundTint="@color/call_accept"
+                        app:elevation="4dp"
+                        app:fabCustomSize="68dp"
+                        app:maxImageSize="30dp"
+                        app:tint="@color/call_accept_ink"
+                        tools:visibility="visible" />
+
+                    <TextView
+                        android:id="@+id/accept_call_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:paddingHorizontal="4dp"
+                        android:textAppearance="?textAppearanceLabelLarge"
+                        android:textColor="?colorOnSurface"
+                        android:visibility="gone"
+                        tools:text="Accept"
+                        tools:visibility="visible" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- Outgoing / connected: mute — end call — speaker (or flip camera on video calls).
+                 Every column shares the same FAB-then-label structure so the three FAB circles
+                 line up on the same row regardless of whether a given slot has a label. -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="top"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/in_call_fab_margin"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/in_call_action_left"
+                        style="?attr/floatingActionButtonSmallSurfaceStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        app:fabCustomSize="@dimen/call_control_button_size" />
+
+                    <TextView
+                        android:id="@+id/in_call_action_left_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:paddingHorizontal="4dp"
+                        android:textAppearance="?textAppearanceLabelMedium"
+                        android:textColor="?colorOnSurfaceVariant"
+                        android:visibility="gone"
+                        tools:text="Mute" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/in_call_fab_margin_center"
+                    android:layout_marginEnd="@dimen/in_call_fab_margin_center"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/end_call"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_call_end_24dp"
+                        android:visibility="visible"
+                        app:backgroundTint="?colorError"
+                        app:elevation="4dp"
+                        app:fabCustomSize="68dp"
+                        app:maxImageSize="30dp"
+                        app:tint="?colorOnError" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/in_call_fab_margin"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/in_call_action_right"
+                        style="?attr/floatingActionButtonSmallSurfaceStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        app:fabCustomSize="@dimen/call_control_button_size" />
+
+                    <TextView
+                        android:id="@+id/in_call_action_right_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:paddingHorizontal="4dp"
+                        android:textAppearance="?textAppearanceLabelMedium"
+                        android:textColor="?colorOnSurfaceVariant"
+                        android:visibility="gone"
+                        tools:text="Speaker" />
+                </LinearLayout>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/using_account"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="8dp"
+            android:text="@string/using_account"
+            android:textAppearance="?textAppearanceLabelMedium"
+            android:visibility="gone"/>
+
+    </RelativeLayout>
+</layout>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Centered MFA verification badge: accent-soft rounded tile inside a faint
+     accent halo, mirroring the design's 0 0 0 8px glow ring. -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape>
+            <solid android:color="@color/mfa_badge_glow" />
+            <corners android:radius="26dp" />
+        </shape>
+    </item>
+    <item
+        android:left="8dp"
+        android:top="8dp"
+        android:right="8dp"
+        android:bottom="8dp">
+        <shape>
+            <solid android:color="@color/restore_accent_soft" />
+            <corners android:radius="20dp" />
+        </shape>
+    </item>
+</layer-list>

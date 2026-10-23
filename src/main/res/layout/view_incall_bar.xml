@@ -1,0 +1,26 @@
+<androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/toolbar_in_external_call"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/light_green_A700"
+    android:gravity="center_vertical"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/tap_to_return_to_glacier_call"/>
+
+<!--    <ImageButton-->
+<!--        android:id="@+id/incall_bar_end_call"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:src="@drawable/ic_call_end_24dp"-->
+<!--        android:background="@null"-->
+<!--        android:contentDescription="End Call"-->
+<!--        app:tint="@android:color/white" />-->
+
+</androidx.appcompat.widget.Toolbar>

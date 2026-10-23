@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Direction B dial pad: centered number with inline backspace, text keypad,
+     and a single green call button. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!-- Number display + inline backspace -->
+    <LinearLayout
+        android:id="@+id/address_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingTop="48dp"
+        android:paddingBottom="16dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
+
+        <!-- Leading spacer keeps the number optically centred against the backspace -->
+        <View
+            android:layout_width="44dp"
+            android:layout_height="1dp" />
+
+        <com.glaciersecurity.glaciermessenger.ui.util.AddressText
+            android:id="@+id/address"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:ellipsize="start"
+            android:hint="@string/address_bar_hint"
+            android:inputType="text"
+            android:digits="0123456789*+#"
+            android:fontFeatureSettings="tnum"
+            android:letterSpacing="0.02"
+            android:maxLines="1"
+            android:textSize="34sp"
+            android:textStyle="normal"
+            android:textColorHint="?attr/colorOnSurfaceVariant"
+            android:textColor="?attr/colorOnSurface" />
+
+        <com.glaciersecurity.glaciermessenger.ui.util.EraseButton
+            android:id="@+id/erase"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_gravity="center_vertical"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/content_description_backspace"
+            android:padding="10dp"
+            android:scaleType="fitCenter"
+            android:tint="?attr/colorOnSurfaceVariant"
+            android:src="@drawable/ic_baseline_backspace_24" />
+
+    </LinearLayout>
+
+    <!-- Keypad fills the available space between the number and the call row -->
+    <include
+        android:id="@+id/numpad"
+        layout="@layout/numpad"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <!-- Call row -->
+    <RelativeLayout
+        android:id="@+id/controls"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="8dp"
+        android:paddingBottom="24dp">
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/start_call"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/btn_circle_call_green"
+            android:contentDescription="@string/content_description_call"
+            android:padding="20dp"
+            android:scaleType="fitCenter"
+            android:tint="@android:color/white"
+            android:src="@drawable/ic_baseline_phone_in_talk_24" />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/end_call"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/btn_circle_call_green"
+            android:backgroundTint="@color/lobbyHangup"
+            android:contentDescription="@string/end_call"
+            android:padding="20dp"
+            android:scaleType="fitCenter"
+            android:tint="@android:color/white"
+            android:src="@drawable/ic_call_end_white_35px"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+
+</LinearLayout>

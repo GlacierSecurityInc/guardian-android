@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Core Connection — modernized. Import + Settings as toolbar icon actions
+     (replacing the floating FABs that collided with the protection strip). -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_import_profiles"
+        android:icon="@drawable/baseline_import_export_24"
+        android:title="@string/core_import_profiles"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_vpn_settings"
+        android:icon="@drawable/ic_settings_24dp"
+        android:title="@string/action_settings"
+        app:showAsAction="always" />
+
+</menu>

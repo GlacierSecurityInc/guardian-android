@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    Debug-variant override of src/main/res/xml/network_security_configuration.xml.
+
+    This exists so instrumented fault-injection tests can reach a MockWebServer on the host
+    machine. It changes nothing about release builds: this file lives in the debug source set,
+    and <debug-overrides> is ignored by the platform unless android:debuggable is true.
+
+    The prod and staging pin-sets below are a VERBATIM COPY of the ones in the main config.
+    NetworkSecurityConfigParityTest fails the build if the two files drift apart, so a pin
+    rotation that updates only one of them is caught before it ships.
+-->
+<network-security-config>
+
+    <!-- Keep global defaults strict -->
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+
+    <!-- PROD API host -->
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="false">@string/glacier_api_host_prod</domain>
+        <pin-set expiration="2027-12-31">
+            <!-- Amazon Trust Services -->
+            <pin digest="SHA-256">AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</pin> <!-- Amazon M01 -->
+            <pin digest="SHA-256">BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB=</pin> <!-- Amazon M04 -->
+            <pin digest="SHA-256">CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC=</pin> <!-- Amazon Root CA 1 -->
+
+            <!-- Backup/alternate chain -->
+            <pin digest="SHA-256">DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD=</pin> <!-- GTS intermediate -->
+            <pin digest="SHA-256">EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE=</pin> <!-- GTS root -->
+        </pin-set>
+    </domain-config>
+
+    <!-- Optional: staging host -->
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="false">@string/glacier_api_host_staging</domain>
+        <pin-set expiration="2027-12-31">
+            <pin digest="SHA-256">AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</pin>
+            <pin digest="SHA-256">BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB=</pin>
+            <pin digest="SHA-256">CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC=</pin>
+            <pin digest="SHA-256">DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD=</pin>
+            <pin digest="SHA-256">EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE=</pin>
+        </pin-set>
+    </domain-config>
+
+    <!--
+        The loopback addresses an instrumented test can reach a host-side MockWebServer on:
+        10.0.2.2 is the host as seen from an emulator, and 127.0.0.1 is the host as seen from a
+        physical device once `adb reverse tcp:8080 tcp:8080` is in place. No pin-set, because a
+        throwaway test certificate can never match one, and cleartext is permitted so tests do
+        not need to mint a certificate at all.
+    -->
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="false">10.0.2.2</domain>
+        <domain includeSubdomains="false">127.0.0.1</domain>
+        <domain includeSubdomains="false">localhost</domain>
+    </domain-config>
+
+    <!--
+        Trust certificates the user or the test harness has installed, so a MockWebServer using
+        HTTPS with a locally installed CA also works. Applies only to debuggable builds.
+    -->
+    <debug-overrides>
+        <trust-anchors>
+            <certificates src="system" />
+            <certificates src="user" />
+        </trust-anchors>
+    </debug-overrides>
+
+    <!-- AWS Cognito. Pinned here rather than in GlacierCertificatePinner because Amplify
+         (Amplify.Auth.fetchAuthSession) uses its own HTTP stack, not the app's OkHttpClient, so an
+         OkHttp pin would never apply to it. The platform config binds at the TLS layer regardless
+         of which stack opens the socket. This mirrors NSPinnedDomains in the iOS app, which pins
+         these same two hosts for the same reason. Chains verified live 2026-09-22:
+         cognito-idp -> Amazon RSA 2048 M01 -> Amazon Root CA 1;
+         *.auth.us-east-1.amazoncognito.com -> Amazon RSA 2048 M04 -> Amazon Root CA 1. -->
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="false">cognito-idp.us-east-1.amazonaws.com</domain>
+        <pin-set expiration="2027-12-31">
+            <pin digest="SHA-256">AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</pin> <!-- Amazon M01 -->
+            <pin digest="SHA-256">BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB=</pin> <!-- Amazon M04 -->
+            <pin digest="SHA-256">CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC=</pin> <!-- Amazon Root CA 1 -->
+        </pin-set>
+    </domain-config>
+
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="false">glaciersec.auth.us-east-1.amazoncognito.com</domain>
+        <pin-set expiration="2027-12-31">
+            <pin digest="SHA-256">AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</pin> <!-- Amazon M01 -->
+            <pin digest="SHA-256">BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB=</pin> <!-- Amazon M04 -->
+            <pin digest="SHA-256">CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC=</pin> <!-- Amazon Root CA 1 -->
+        </pin-set>
+    </domain-config>
+
+</network-security-config>

@@ -1,0 +1,455 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:fitsSystemWindows="true">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.appbar.MaterialToolbar style="@style/BlackToolbar"
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="?attr/actionBarSize" />
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <ScrollView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:clipToPadding="false">
+
+            <LinearLayout
+                android:id="@+id/details_main_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="100dp">
+
+
+                <LinearLayout
+                    android:id="@+id/profile"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                        android:layout_marginRight="@dimen/activity_horizontal_margin"
+                        android:layout_marginBottom="@dimen/spacing_middle"
+                        android:text="@string/contact_cap"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                        android:textColor="@color/dark_accent_color"
+                        app:fontFamily="@font/neue_haas_grotesk"
+                        android:textStyle="bold" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/card_padding_regular">
+
+                        <com.makeramen.roundedimageview.RoundedImageView
+                            android:id="@+id/details_contact_badge"
+                            android:layout_width="@dimen/avatar_on_details_screen_size"
+                            android:layout_height="@dimen/avatar_on_details_screen_size"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginEnd="@dimen/avatar_item_distance"
+                            android:contentDescription="@string/account_image_description"
+                            android:paddingRight="@dimen/spacing_medium"
+                            app:riv_corner_radius="8dp" />
+                        <ImageView
+                            android:id="@+id/details_contactpresence_icon"
+                            android:layout_alignRight="@id/details_contact_badge"
+                            android:layout_alignBottom="@id/details_contact_badge"
+                            android:layout_marginRight="-3dp"
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+                            android:layout_gravity="center"
+                            android:adjustViewBounds="true"/>
+
+                        <LinearLayout
+                            android:id="@+id/details_jidbox"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_toEndOf="@+id/details_contact_badge"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/details_contactjid"
+                                style="@style/TextAppearance.AppCompat.Title"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@"
+                                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                                    android:textColor="@color/dark_accent_color"
+                                    android:textStyle="italic"
+                                    app:fontFamily="@font/neue_haas_grotesk" />
+
+                                <TextView
+                                    android:id="@+id/account_jid"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                                    android:textColor="@color/dark_accent_color"
+                                    android:textStyle="italic"
+                                    app:fontFamily="@font/neue_haas_grotesk" />
+
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/status_container"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:id="@+id/details_lastseen"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textAppearance="?textAppearanceTitleSmall" />
+
+                                <TextView
+                                    android:id="@+id/details_status_tag"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="@dimen/spacing_small"
+                                    android:background="@drawable/layout_shadow_border_tags"
+                                    android:maxLines="1"
+                                    android:minHeight="10dp"
+                                    android:paddingHorizontal="8dp"
+                                    android:textAppearance="?textAppearanceLabelMedium"
+                                    android:textColor="@android:color/white"
+                                    android:visibility="gone" />
+                            </LinearLayout>
+
+                            <TextView
+                                android:id="@+id/status_message"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/activity_margin_1"
+                                android:layout_marginBottom="@dimen/activity_margin_1"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+                        </LinearLayout>
+                    </RelativeLayout>
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/teams"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/shared_teams_cap"
+                        android:layout_marginBottom="@dimen/spacing_middle"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                        android:layout_marginRight="@dimen/activity_horizontal_margin"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                        android:textColor="@color/dark_accent_color"
+                        app:fontFamily="@font/neue_haas_grotesk"
+                        android:textStyle="bold" />
+                    <LinearLayout
+                        android:id="@+id/teams_flow"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/card_padding_small"
+                        android:layout_marginRight="@dimen/card_padding_small"
+                        android:orientation="vertical">
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/tags"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8sp">
+
+                                <androidx.constraintlayout.helper.widget.Flow
+                                    android:id="@+id/flow_widget"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    app:flow_horizontalBias="0"
+                                    app:flow_horizontalGap="8sp"
+                                    app:flow_horizontalStyle="packed"
+                                    app:flow_verticalGap="4sp"
+                                    app:flow_wrapMode="chain"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+                    </LinearLayout>
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/actions"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/actions"
+
+                        android:layout_marginBottom="@dimen/spacing_middle"
+                        android:layout_marginLeft="@dimen/card_padding_regular"
+                        android:layout_marginRight="@dimen/card_padding_regular"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                        android:textColor="@color/dark_accent_color"
+                        app:fontFamily="@font/neue_haas_grotesk"
+                        android:visibility="gone"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/card_padding_small"
+                        android:layout_marginRight="@dimen/card_padding_small"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <Button
+                                android:id="@+id/edit_displayname_name_button"
+                                style="@style/Widget.AppCompat.Button.Borderless"
+                                android:layout_width="0px"
+                                android:layout_height="25dp"
+                                android:layout_weight=".5"
+                                android:drawableLeft="@drawable/ic_baseline_edit_20"
+                                android:gravity="start|center_vertical"
+                                android:text="@string/action_edit_contact"
+                                android:textAlignment="textStart"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                                android:textColor="@color/dark_accent_color"
+                                android:visibility="gone"/>
+
+<!--                            <Button-->
+<!--                                android:id="@+id/add_contact_button"-->
+<!--                                style="@style/Widget.Material3.Button.ElevatedButton"-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_marginTop="8dp"-->
+<!--                                android:text="@string/add_contact" />-->
+
+                            <Button
+                                android:id="@+id/add_contact_button"
+                                android:text="@string/add_contact"
+                                android:gravity="start|center_vertical"
+                                android:textAlignment="textStart"
+                                style="@style/Widget.AppCompat.Button.Borderless"
+                                android:layout_width="0px"
+                                android:layout_weight=".5"
+                                android:layout_height="@dimen/spacing_xmlarge"
+                                android:textColor="@color/dark_accent_color"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                                android:drawableLeft="@drawable/ic_account_box_20dp"/>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:visibility="gone">
+
+
+                            <CheckBox
+                                android:id="@+id/details_send_presence"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="8dp"
+                                android:text="@string/send_presence_updates" />
+
+                            <CheckBox
+                                android:id="@+id/details_receive_presence"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="8dp"
+                                android:text="@string/receive_presence_updates" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/details_account"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/details_jidbox"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginTop="32dp"
+                            android:textAppearance="?textAppearanceLabelMedium"
+                            android:visibility="gone"/>
+                    </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/media_wrapper"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/activity_vertical_margin"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/media_cap"
+
+                                android:layout_marginBottom="@dimen/spacing_middle"
+                                android:layout_marginLeft="@dimen/card_padding_regular"
+                                android:layout_marginRight="@dimen/card_padding_regular"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                                android:textColor="@color/dark_accent_color"
+                                app:fontFamily="@font/neue_haas_grotesk"
+                                android:textStyle="bold" />
+
+                            <LinearLayout
+                                android:id="@+id/media_layout"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/card_padding_small"
+                                android:layout_marginRight="@dimen/card_padding_small"
+                                android:orientation="vertical">
+
+
+                                <androidx.recyclerview.widget.RecyclerView
+                                    android:id="@+id/media"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                                    android:layout_marginTop="@dimen/activity_vertical_margin"
+                                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                                    android:layout_marginBottom="@dimen/activity_vertical_margin"                                    android:orientation="horizontal" />
+
+
+
+                                    <Button
+                                        android:id="@+id/show_media"
+                                        style="@style/Widget.Material3.Button.TextButton"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="@string/view_media"
+                                        android:paddingLeft="16dp"/>
+
+                        </LinearLayout>
+
+                        </LinearLayout>
+
+
+
+
+                </LinearLayout>
+
+
+
+
+                <LinearLayout
+                    android:id="@+id/keys_wrapper"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"
+                    android:visibility="gone"
+                    tools:visibility="visible"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/devices_cap"
+                        android:layout_marginBottom="@dimen/spacing_middle"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                        android:layout_marginRight="@dimen/activity_horizontal_margin"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                        android:textColor="@color/dark_accent_color"
+                        app:fontFamily="@font/neue_haas_grotesk"
+                        android:textStyle="bold" />
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:id="@+id/details_contact_keys"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="@dimen/card_padding_list" />
+
+                        <LinearLayout
+                            android:id="@+id/unverified_warning"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingHorizontal="@dimen/card_padding_list">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginHorizontal="@dimen/list_padding"
+                                android:text="@string/contact_uses_unverified_keys"
+                                android:textAppearance="?textAppearanceBodyMedium"
+                                android:textColor="?colorOnSurfaceVariant"
+                                android:visibility="gone"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="8dp"
+                            android:orientation="horizontal"
+                            android:padding="@dimen/card_padding_list">
+
+
+                            <Button
+                                android:id="@+id/scan_button"
+                                style="@style/Widget.Material3.Button.TextButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/scan_qr_code"
+                                android:visibility="gone" />
+
+                            <Button
+                                android:id="@+id/show_inactive_devices"
+                                style="@style/Widget.Material3.Button.TextButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/show_inactive_devices" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+</layout>

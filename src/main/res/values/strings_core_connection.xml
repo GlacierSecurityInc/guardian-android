@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Core Connection — modernized. Copy for the redesigned secure-tunnel screen. -->
+<resources>
+    <string name="core_status_connecting">Connecting…</string>
+    <string name="core_status_disconnecting">Disconnecting…</string>
+    <string name="core_select_profile_title">Select a profile</string>
+    <string name="core_active_profile_label">Active profile</string>
+    <string name="core_protection_strip">Encrypts &amp; anonymizes all data</string>
+
+    <string name="core_session_label">Session</string>
+    <string name="core_down_label">Down</string>
+    <string name="core_up_label">Up</string>
+    <string name="core_throughput_unit">MB/s</string>
+    <string name="core_stat_unavailable">—</string>
+
+    <string name="core_profile_name_label">Profile name</string>
+    <string name="core_profile_name_hint">Enter a nickname</string>
+    <string name="core_rename_profile_title">Rename profile</string>
+
+    <string name="core_import_profiles">Import profiles</string>
+
+    <string name="core_connect_title">Connect to this profile?</string>
+    <string name="core_switch_title">Switch to this profile?</string>
+    <string name="core_switch_action">Switch</string>
+    <string name="core_disconnect_title">Disconnect?</string>
+    <string name="core_disconnect_message">Your traffic will no longer be protected on this network.</string>
+    <string name="core_protocol_label">Protocol</string>
+    <string name="core_protocol_value">WireGuard</string>
+
+    <string name="core_revoked_title">Core Connection is off</string>
+    <string name="core_revoked_body">Another VPN app or a system setting turned Core Connection off. Your traffic is no longer protected.</string>
+    <string name="core_revoked_turn_back_on">Turn back on</string>
+    <string name="core_revoked_keep_off">Keep it off</string>
+    <string name="core_alerts_channel_name">Core Connection alerts</string>
+    <string name="core_alerts_channel_description">Tells you when Core Connection stops without you turning it off.</string>
+</resources>

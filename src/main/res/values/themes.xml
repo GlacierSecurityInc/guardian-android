@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Splash theme only: applied solely to the launcher activity (ConversationActivity),
+         which never renders content itself, so its manifest theme purely controls the splash
+         appearance. windowSplashScreenBackground/AnimatedIcon are forced dark regardless of the
+         system light/dark setting (the brand mark is designed for a dark backdrop), but
+         windowBackground must match the light/dark AppTheme background (overridden in
+         values-night) - it's what briefly shows once the splash hands off, right before the
+         next real screen (e.g. login) draws, and a mismatch there is a visible black/white cut. -->
+    <style name="Theme.App.Starting" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:windowSplashScreenBackground" tools:ignore="NewApi">@color/splash_background</item>
+        <item name="android:windowSplashScreenAnimatedIcon" tools:ignore="NewApi">@drawable/ic_splash_glacier_brand</item>
+    </style>
+
+    <style name="AppTheme" parent="Theme.Material3.Light.NoActionBar">
+        <!-- Edge-to-edge. Apps targeting API 35+ get transparent system bars whether they ask
+             or not, and these attributes are ignored there; on API 30-34 they are what gives
+             the same result, so a screen looks identical either side of Android 15. The app
+             draws behind the bars (EdgeToEdge.enable in
+             ui/Activities) and keeps its content clear of them with fitsSystemWindows. -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:enforceStatusBarContrast">false</item>
+        <item name="android:enforceNavigationBarContrast">false</item>
+        <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:windowSplashScreenBackground" tools:ignore="NewApi">@color/splash_background</item>
+        <item name="android:windowSplashScreenAnimatedIcon" tools:ignore="NewApi">@drawable/ic_splash_glacier_brand</item>
+        <item name="android:fontFamily">@font/neue_haas_grotesk</item>
+        <item name="fontFamily">@font/neue_haas_grotesk</item>
+        <item name="colorPrimary">@color/md_theme_primary</item>
+        <item name="colorPrimaryDark">@color/green800</item>
+        <item name="colorAccent">@color/blue_a400</item>
+        <item name="colorOnPrimary">@color/md_theme_onPrimary</item>
+        <item name="colorPrimaryContainer">@color/md_theme_primaryContainer</item>
+        <item name="colorOnPrimaryContainer">@color/md_theme_onPrimaryContainer</item>
+        <item name="colorSecondary">@color/md_theme_secondary</item>
+        <item name="colorOnSecondary">@color/md_theme_onSecondary</item>
+        <item name="colorSecondaryContainer">@color/md_theme_secondaryContainer</item>
+        <item name="colorOnSecondaryContainer">@color/md_theme_onSecondaryContainer</item>
+        <item name="colorTertiary">@color/md_theme_tertiary</item>
+        <item name="colorOnTertiary">@color/md_theme_onTertiary</item>
+        <item name="colorTertiaryContainer">@color/md_theme_tertiaryContainer</item>
+        <item name="colorOnTertiaryContainer">@color/md_theme_onTertiaryContainer</item>
+        <item name="colorError">@color/md_theme_error</item>
+        <item name="errorColor">@color/glacier_2026_danger</item>
+        <item name="colorOnError">@color/md_theme_onError</item>
+        <item name="colorErrorContainer">@color/md_theme_errorContainer</item>
+        <item name="colorOnErrorContainer">@color/md_theme_onErrorContainer</item>
+        <item name="android:colorBackground">@color/md_theme_background</item>
+        <item name="colorOnBackground">@color/md_theme_onBackground</item>
+        <item name="colorSurface">@color/md_theme_surface</item>
+        <item name="colorOnSurface">@color/md_theme_onSurface</item>
+        <item name="colorSurfaceVariant">@color/md_theme_surfaceVariant</item>
+        <item name="colorOnSurfaceVariant">@color/md_theme_onSurfaceVariant</item>
+        <item name="colorOutline">@color/md_theme_outline</item>
+        <item name="colorOutlineVariant">@color/md_theme_outlineVariant</item>
+        <item name="colorSurfaceInverse">@color/md_theme_inverseSurface</item>
+        <item name="colorOnSurfaceInverse">@color/md_theme_inverseOnSurface</item>
+        <item name="colorPrimaryInverse">@color/md_theme_inversePrimary</item>
+        <item name="colorPrimaryFixed">@color/md_theme_primaryFixed</item>
+        <item name="colorOnPrimaryFixed">@color/md_theme_onPrimaryFixed</item>
+        <item name="colorPrimaryFixedDim">@color/md_theme_primaryFixedDim</item>
+        <item name="colorOnPrimaryFixedVariant">@color/md_theme_onPrimaryFixedVariant</item>
+        <item name="colorSecondaryFixed">@color/md_theme_secondaryFixed</item>
+        <item name="colorOnSecondaryFixed">@color/md_theme_onSecondaryFixed</item>
+        <item name="colorSecondaryFixedDim">@color/md_theme_secondaryFixedDim</item>
+        <item name="colorOnSecondaryFixedVariant">@color/md_theme_onSecondaryFixedVariant</item>
+        <item name="colorTertiaryFixed">@color/md_theme_tertiaryFixed</item>
+        <item name="colorOnTertiaryFixed">@color/md_theme_onTertiaryFixed</item>
+        <item name="colorTertiaryFixedDim">@color/md_theme_tertiaryFixedDim</item>
+        <item name="colorOnTertiaryFixedVariant">@color/md_theme_onTertiaryFixedVariant</item>
+        <item name="colorSurfaceDim">@color/md_theme_surfaceDim</item>
+        <item name="colorSurfaceBright">@color/md_theme_surfaceBright</item>
+        <item name="colorSurfaceContainerLowest">@color/md_theme_surfaceContainerLowest</item>
+        <item name="colorSurfaceContainerLow">@color/md_theme_surfaceContainerLow</item>
+        <item name="colorSurfaceContainer">@color/md_theme_surfaceContainer</item>
+        <item name="colorSurfaceContainerHigh">@color/md_theme_surfaceContainerHigh</item>
+        <item name="colorSurfaceContainerHighest">@color/md_theme_surfaceContainerHighest</item>
+
+        <item name="color_background_primary">@android:color/white</item>
+        <item name="color_background_secondary">@android:color/white</item>
+        <item name="color_background_tertiary">@android:color/white</item>
+        <item name="color_background_overlay">@color/black</item>
+        <item name="color_warning">@color/red_a700</item>
+        <item name="TextColorOnline">@color/green600</item>
+        <item name="TextColorError">@color/red800</item>
+        <item name="edit_text_color">@color/black</item>
+        <item name="icon_tint">@color/black</item>
+
+        <item name="EmojiColor">@color/black</item>
+
+        <item name="windowActionModeOverlay">true</item>
+        <item name="android:actionModeBackground">?color_background_primary</item>
+
+        <item name="TextSizeCaption">12sp</item>
+        <item name="TextSizeBody1">14sp</item>
+        <item name="TextSizeBody2">14sp</item>
+        <item name="TextSizeSubhead">16sp</item>
+        <item name="TextSizeTitle">20sp</item>
+        <item name="TextSizeDisplay2">45sp</item>
+        <item name="TextSizeInput">16sp</item>
+        <item name="TextSeparation">5sp</item>
+        <item name="IconSize">18sp</item>
+
+        <item name="divider">@color/black12</item>
+
+
+        <item name="unread_count">@color/glacier_blue</item>
+
+        <item name="conversations_overview_background">@color/glacier_blue</item>
+
+        <item name="icon_alpha" type="float">0.54</item>
+        <item name="delete_icon_alpha" type="float">0.70</item>
+
+        <item name="dialog_horizontal_padding">24dp</item>
+        <item name="dialog_vertical_padding">16dp</item>
+        <item name="materialAlertDialogTheme">@style/ThemeOverlay.App.AlertDialog</item>
+
+    </style>
+
+    <!-- Bottom-sheet-style dialog surface (e.g. RecordingActivity) that keeps the app's
+         Material3 color scheme and matches the reset-password / MFA sheet chrome. -->
+    <style name="AppTheme.RecordingDialog" parent="AppTheme">
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:backgroundDimAmount">0.6</item>
+        <item name="android:windowCloseOnTouchOutside">false</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.InputMethod</item>
+    </style>
+
+    <style name="AppTheme.Dark" parent="Theme.AppCompat.NoActionBar">
+        <item name="colorPrimary">@color/blue_a100</item>
+        <item name="colorPrimaryDark">@color/glacier_blue</item>
+        <item name="colorAccent">@color/blue_a100</item>
+        <item name="android:navigationBarColor" tools:targetApi="21">@color/black</item>
+
+        <item name="color_background_primary">@color/grey800</item>
+        <item name="color_background_secondary">@color/grey900</item>
+        <item name="color_background_tertiary">@color/grey700</item>
+        <item name="color_background_overlay">@color/black</item>
+
+        <item name="color_warning">@color/red_a100</item>
+
+        <item name="TextColorOnline">@color/green500</item>
+        <item name="TextColorError">@color/red500</item>
+        <item name="edit_text_color">@color/white</item>
+        <item name="icon_tint">@color/white</item>
+
+        <item name="EmojiColor">@color/white</item>
+
+        <item name="windowActionModeOverlay">true</item>
+        <item name="android:actionModeBackground">?color_background_primary</item>
+
+        <item name="TextSizeCaption">12sp</item>
+        <item name="TextSizeBody1">14sp</item>
+        <item name="TextSizeBody2">14sp</item>
+        <item name="TextSizeSubhead">16sp</item>
+        <item name="TextSizeTitle">20sp</item>
+        <item name="TextSizeDisplay2">45sp</item>
+        <item name="TextSizeInput">16sp</item>
+        <item name="TextSeparation">5sp</item>
+        <item name="IconSize">18sp</item>
+
+        <item name="divider">@color/white12</item>
+
+    </style>
+    <style name="AppTheme.Medium" parent="AppTheme">
+        <item name="TextSizeCaption">14sp</item>
+        <item name="TextSizeBody1">16sp</item>
+        <item name="TextSizeBody2">16sp</item>
+        <item name="TextSizeSubhead">18sp</item>
+        <item name="TextSizeTitle">22sp</item>
+        <item name="TextSizeDisplay2">47sp</item>
+        <item name="TextSizeInput">18sp</item>
+        <item name="TextSeparation">6sp</item>
+        <item name="IconSize">20sp</item>
+    </style>
+
+    <style name="AppTheme.Dark.Medium" parent="AppTheme.Dark">
+        <item name="TextSizeCaption">14sp</item>
+        <item name="TextSizeBody1">16sp</item>
+        <item name="TextSizeBody2">16sp</item>
+        <item name="TextSizeSubhead">18sp</item>
+        <item name="TextSizeTitle">22sp</item>
+        <item name="TextSizeDisplay2">47sp</item>
+        <item name="TextSizeInput">18sp</item>
+        <item name="TextSeparation">6sp</item>
+        <item name="IconSize">20sp</item>
+    </style>
+
+    <style name="AppTheme.Dark.Large" parent="AppTheme.Dark">
+        <item name="TextSizeCaption">16sp</item>
+        <item name="TextSizeBody1">18sp</item>
+        <item name="TextSizeBody2">18sp</item>
+        <item name="TextSizeSubhead">20sp</item>
+        <item name="TextSizeTitle">24sp</item>
+        <item name="TextSizeDisplay2">48sp</item>
+        <item name="TextSizeInput">20sp</item>
+        <item name="TextSeparation">7sp</item>
+        <item name="IconSize">22sp</item>
+    </style>
+
+    <style name="DialerDigit" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@android:color/transparent</item>
+        <item name="android:layout_width">80dp</item>
+        <item name="android:layout_height">80dp</item>
+    </style>
+
+    <!-- Direction B keypad: one cell of the 3-column grid, equal width, full height -->
+    <style name="DialerKeyCell">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
+    </style>
+
+    <!-- Direction B keypad key visuals (digit + letter sub-label) -->
+    <style name="DialerKeyLabel">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:gravity">center</item>
+        <item name="android:clickable">false</item>
+        <item name="android:focusable">false</item>
+        <item name="android:duplicateParentState">false</item>
+    </style>
+
+    <style name="DialerKeyDigit">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">30sp</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="DialerKeyLetters">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:minHeight">14dp</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0.15</item>
+        <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <declare-styleable name="Numpad">
+        <attr name="play_dtmf">
+            <enum name="dont" value="0" />
+            <enum name="play" value="1" />
+        </attr>
+    </declare-styleable>
+
+    <style name="numpad_composed_number_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">?colorControlNormal</item>
+        <item name="android:textSize">30sp</item>
+    </style>
+
+
+
+    <style name="ThemeOverlay.App.AlertDialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+        <item name="colorSurface">@color/md_theme_surfaceContainerHigh</item>
+        <item name="colorOnSurface">@color/md_theme_onSurface</item>
+        <item name="colorOnSurfaceVariant">@color/md_theme_onSurfaceVariant</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.App.AlertDialog</item>
+        <item name="buttonBarPositiveButtonStyle">@style/Widget.App.AlertDialog.Button.Primary</item>
+        <item name="buttonBarNegativeButtonStyle">@style/Widget.App.AlertDialog.Button.Secondary</item>
+        <item name="buttonBarNeutralButtonStyle">@style/Widget.App.AlertDialog.Button.Secondary</item>
+    </style>
+
+    <style name="ShapeAppearanceOverlay.App.AlertDialog" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">28dp</item>
+    </style>
+
+    <style name="Widget.App.AlertDialog.Button.Primary" parent="Widget.Material3.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/md_theme_primary</item>
+    </style>
+
+    <style name="Widget.App.AlertDialog.Button.Secondary" parent="Widget.Material3.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/md_theme_onSurfaceVariant</item>
+    </style>
+
+</resources>

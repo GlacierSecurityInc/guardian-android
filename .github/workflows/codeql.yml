@@ -1,0 +1,172 @@
+name: CodeQL Security
+
+# Security scanning for the Java source (language: java-kotlin -- the tree is pure Java,
+# 0 .kt files as of 2026-09-21).
+#
+# WHY THIS FILE EXISTS. The repo's only other CodeQL analysis is GitHub's *code quality*
+# default setup ("CodeQL - Code Quality", dynamic/github-code-quality/codeql). That run is
+# green on every PR but it runs `analysis-kinds: code-quality` -- 89 queries out of
+# Performance / Violations of Best Practice / Likely Bugs -- and writes java.quality.sarif.
+# It contains no security queries, and code-scanning default setup reports
+# "state": "not-configured", so the last security analysis this repo had was 2026-01-15.
+# This workflow is the security half; the two are complementary, not duplicates.
+#
+# WHY build-mode: manual. Under `build-mode: none` (what the quality run uses) CodeQL asks
+# Maven for `:jar:` artifacts, and nearly every Android dependency publishes an `.aar`. The
+# 2026-09-21 run logged "Fetching a dependency jar failed (49 results)" -- all of
+# dl.google.com (androidx/firebase/play-services), jitpack, libsignal, conscrypt, Twilio and
+# Mapbox -- and fell back to guessing the classpath from package names. Source still parses,
+# but framework types go unresolved and taint tracking through Android APIs is mostly blind.
+# Retrying does not help; the fix is to compile the code for real.
+#
+# The build needs the same three repo secrets as the lint and unit-test jobs in
+# code-quality-scan.yml:
+#   - MAPBOX_DOWNLOADS_TOKEN, GOOGLE_SERVICES_JSON, ENDPOINT_CONFIG_JAVA
+
+on:
+  # Alerts are tracked against the default branch, so main must be scanned on push.
+  # (The filter only bites where this file exists; a push to a branch without it runs
+  # nothing regardless of what is listed here.)
+  push:
+    branches: [main, "7.2"]
+  # Deliberately unfiltered. For pull_request, `branches:` filters the *base*, and
+  # android-build.yml is the standing example of what that costs: its base filter
+  # (["sdk37", main]) means a PR into 7.2 never matches it and the workflow is
+  # effectively dead there.
+  pull_request:
+  # Weekly deep run: `security-extended` (see the init step), plus the plain benefit that
+  # queries and the CodeQL bundle improve even when the code does not.
+  schedule:
+    - cron: "24 7 * * 1"
+  # Manual runs pick their own suite, so the extended set can be run on demand instead of
+  # waiting for Monday -- useful right after this lands, to populate the extended category.
+  workflow_dispatch:
+    inputs:
+      suite:
+        description: Query suite to run
+        type: choice
+        default: security-extended
+        options:
+          - security-extended
+          - default
+
+# Whether this run uses the wide suite. `inputs` is empty on push/PR/schedule events, so
+# this reads as false there unless the schedule matched.
+env:
+  EXTENDED: ${{ github.event_name == 'schedule' || inputs.suite == 'security-extended' }}
+
+permissions:
+  contents: read
+  # Required to upload the SARIF as code scanning alerts.
+  security-events: write
+  # The CodeQL action reads its own workflow run through the API to derive the analysis key
+  # it uploads under. Without this the run dies after the analysis completes with
+  # "Resource not accessible by integration - .../actions/workflow-runs", which reads like a
+  # token problem but is just this missing scope.
+  actions: read
+
+concurrency:
+  # One lane per suite, not one per ref. The extended run and an ordinary push both happen
+  # on refs/heads/main, so a single group with cancel-in-progress lets a Monday-morning push
+  # cancel that week's extended analysis -- and since the two upload to different categories,
+  # the cancelled one's category then goes stale until the next scheduled run. Within a lane
+  # cancelling is still right: a newer commit's analysis supersedes an older one's.
+  # Same expression as the EXTENDED flag below; `env` is not available in this context.
+  group: codeql-${{ github.ref }}-${{ github.event_name == 'schedule' || inputs.suite == 'security-extended' }}
+  cancel-in-progress: true
+
+jobs:
+  analyze:
+    name: Security analysis (java-kotlin)
+    runs-on: ubuntu-latest
+    # 60 covers the default suite comfortably; the weekly security-extended run is the
+    # one that needs the headroom.
+    timeout-minutes: 90
+    # Fork PRs don't receive repo secrets, which would leave the module unbuildable and
+    # fail the build step every time. Same guard as code-quality-scan.yml.
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Clear Android SDK cache
+        run: |
+          rm -rf /usr/local/lib/android/sdk/cmdline-tools
+          rm -rf ~/android-sdk
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v4
+        with:
+          # The action's default package list is "tools platform-tools", but Google has
+          # removed the legacy "tools" package from the SDK repository: sdkmanager fails to
+          # find it, exits 1, and the job dies in setup before Gradle ever runs. Ask for
+          # platform-tools only -- AGP resolves the platform and build-tools it needs by
+          # itself. Identical to the jobs in code-quality-scan.yml, which hit this first.
+          packages: platform-tools
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v6
+
+      - name: Write google-services.json
+        env:
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+        run: |
+          if [ -n "$GOOGLE_SERVICES_JSON" ]; then
+            printf '%s' "$GOOGLE_SERVICES_JSON" > google-services.json
+            echo "Wrote google-services.json from secret."
+          else
+            echo "::warning::GOOGLE_SERVICES_JSON secret is not set; the build will fail at processGoogleServices."
+          fi
+
+      - name: Write EndPointConfig.java
+        env:
+          ENDPOINT_CONFIG_JAVA: ${{ secrets.ENDPOINT_CONFIG_JAVA }}
+        run: |
+          if [ -n "$ENDPOINT_CONFIG_JAVA" ]; then
+            printf '%s' "$ENDPOINT_CONFIG_JAVA" > src/main/java/com/glaciersecurity/glaciermessenger/EndPointConfig.java
+            echo "Wrote EndPointConfig.java from secret."
+          else
+            echo "::warning::ENDPOINT_CONFIG_JAVA secret is not set; the build will fail at compile time."
+          fi
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v4
+        with:
+          languages: java-kotlin
+          build-mode: manual
+          # Two suites. Push and PR runs gate merges, so they use the default security
+          # suite: fewer, higher-confidence results, and fast. The weekly run (and any
+          # manual run that asks for it) has nobody waiting on it, so it uses
+          # `security-extended` -- a superset of the default suite that adds
+          # lower-precision queries. Splitting them this way keeps the noise out of the
+          # merge path while still surfacing the wider set somewhere.
+          #
+          # The empty string is how you say "no queries input": the action treats an empty
+          # input as unset and falls back to the default suite. There is no literal name
+          # for the default suite to write here instead.
+          queries: ${{ env.EXTENDED == 'true' && 'security-extended' || '' }}
+
+      # compileXJavaWithJavac, not assembleXDebug: CodeQL only needs the javac invocations
+      # to trace, so skipping dex and packaging saves several minutes. Note the flavour
+      # prefix is mandatory -- bare compileDebugJavaWithJavac does not exist here.
+      - name: Build (debug)
+        env:
+          ORG_GRADLE_PROJECT_MAPBOX_DOWNLOADS_TOKEN: ${{ secrets.MAPBOX_DOWNLOADS_TOKEN }}
+        run: ./gradlew compilePlaystoreDebugJavaWithJavac --stacktrace
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v4
+        with:
+          # The category must differ per suite, or the two would overwrite each other's
+          # results: code scanning closes alerts that a *new analysis in the same category*
+          # no longer reports, so every push would mark the extended-only findings as
+          # fixed, and the next weekly run would reopen them. Separate categories are
+          # tracked independently; identical findings still collapse into one alert with
+          # several instances, so this does not double-report anything.
+          category: ${{ env.EXTENDED == 'true' && '/language:java-kotlin/security-extended' || '/language:java-kotlin' }}

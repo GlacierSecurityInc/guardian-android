@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Direct Share replacement for the deprecated ChooserTargetService. Matches
+         ShareWithActivity's SEND/SEND_MULTIPLE intent-filters; ShortcutService tags the
+         same dynamic conversation shortcuts with this category so frequent contacts show
+         up as direct-share targets. -->
+    <share-target android:targetClass="com.glaciersecurity.glaciermessenger.ui.ConversationsActivity">
+        <data android:mimeType="text/plain" />
+        <data android:mimeType="*/*" />
+        <category android:name="com.glaciersecurity.glaciermessenger.category.TEXT_SHARE_TARGET" />
+    </share-target>
+</shortcuts>

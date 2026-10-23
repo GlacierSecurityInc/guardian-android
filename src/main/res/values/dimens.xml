@@ -1,0 +1,106 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="in_call_fab_margin">8dp</dimen>
+    <dimen name="in_call_fab_margin_center">12dp</dimen>
+    <dimen name="activity_horizontal_margin">8dp</dimen>
+    <dimen name="activity_vertical_margin">8dp</dimen>
+    <dimen name="activity_vertical_margin_half">4dp</dimen>
+    <dimen name="card_padding_regular">16dp</dimen>
+    <dimen name="card_padding_list">8dp</dimen> <!-- card_padding_regular minus list_padding -->
+    <dimen name="list_padding">8dp</dimen>
+    <dimen name="image_button_padding">12dp</dimen>
+    <dimen name="key_action_width">48dp
+    </dimen>  <!-- icon width (24dp) + 2 * image button padding -->
+    <dimen name="fineprint_size">11sp</dimen>
+    <dimen name="audio_player_width">224dp</dimen>
+    <dimen name="image_preview_width">224dp</dimen>
+    <dimen name="location_card_width">224dp</dimen>
+    <dimen name="location_map_height">128dp</dimen>
+    <dimen name="avatar_item_distance">16dp</dimen>
+
+    <dimen name="media_preview_size">80dp</dimen>
+    <dimen name="media_size">56dp</dimen> <!-- ideally not larger than avatar_on_details_screen -->
+    <dimen name="browser_media_size">96dp</dimen>
+    <dimen name="toolbar_elevation">4dp</dimen>
+
+    <!-- Breathing room under the recording sheet's action row. RecordingActivity adds the
+         navigation bar / cutout insets on top of this, so in three-button portrait the sheet
+         still clears the bar by the same 56dp it used to hardcode. -->
+    <dimen name="recording_sheet_bottom_padding">8dp</dimen>
+    <dimen name="publish_avatar_top_margin">8dp</dimen>
+    <dimen name="publish_avatar_size">96dp</dimen>
+    <dimen name="incoming_call_radius">48dp</dimen>
+    <dimen name="avatar_on_status_message">32dp</dimen>
+    <dimen name="avatar">48dp</dimen>
+    <dimen name="avatar_on_details_screen_size">56dp</dimen>
+    <dimen name="avatar_on_conversation_overview">56dp</dimen>
+
+    <dimen name="input_label_vertical_spacing">4dp</dimen>
+    <dimen name="input_label_horizontal_spacing">4dp</dimen>
+
+    <!-- scanner -->
+    <dimen name="scan_laser_width">4dp</dimen>
+    <dimen name="scan_dot_size">8dp</dimen>
+
+    <dimen name="background_image_opacity">0.12</dimen>
+
+    <dimen name="sd_label_max_width">256dp</dimen>
+
+    <dimen name="local_video_preview_height">128dp</dimen>
+    <dimen name="local_video_preview_width">96dp</dimen>
+    <dimen name="rtp_session_duration_top_margin">24dp</dimen>
+
+    <!--genaral spacing-->
+    <dimen name="spacing_xxsmall">1dp</dimen>
+    <dimen name="spacing_xsmall">2dp</dimen>
+    <dimen name="spacing_small">3dp</dimen>
+    <dimen name="spacing_medium">5dp</dimen>
+    <dimen name="spacing_xmedium">7dp</dimen>
+    <dimen name="spacing_middle">10dp</dimen>
+    <dimen name="spacing_midlarge">12dp</dimen>
+    <dimen name="spacing_midlarge2">13dp</dimen>
+    <dimen name="spacing_large">15dp</dimen>
+    <dimen name="spacing_slarge">16dp</dimen>
+    <dimen name="spacing_smlarge">18dp</dimen>
+    <dimen name="spacing_mlarge">20dp</dimen>
+    <dimen name="spacing_mxlarge">25dp</dimen>
+    <dimen name="spacing_xlarge">35dp</dimen>
+    <dimen name="spacing_xmlarge">40dp</dimen>
+    <dimen name="spacing_xxlarge">50dp</dimen>
+    <dimen name="spacing_xxxlarge">55dp</dimen>
+    <dimen name="appbar_padding_top">8dp</dimen>
+
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="footerBarSize">80dp</dimen>
+    <dimen name="footerIconSize">24dp</dimen>
+    <dimen name="security_hub_icon_size">48dp</dimen>
+    <dimen name="security_hub_top_margin">4dp</dimen>
+    <dimen name="activity_margin_0">0</dimen>
+    <dimen name="activity_margin_1">1dp</dimen>
+    <dimen name="card_padding_small">12dp</dimen>
+
+    <dimen name="core_header_padding">24dp</dimen>
+    <dimen name="core_toggle_size">120dp</dimen>
+    <dimen name="core_toggle_icon_size">56dp</dimen>
+    <dimen name="core_day_bar_width">12dp</dimen>
+    <dimen name="core_day_bar_height">32dp</dimen>
+    <dimen name="core_profile_card_stroke_active">2dp</dimen>
+    <dimen name="core_profile_card_stroke_inactive">1dp</dimen>
+
+    <!-- Calling-->
+    <dimen name="calling__controls__max_width">312dp</dimen>
+    <dimen name="calling__controls__button__dimension">64dp</dimen>
+    <dimen name="calling__controls__button_label__dimension">96dp</dimen>
+    <dimen name="calling__controls__button__label__margin_top">8dp</dimen>
+
+    <!-- Glacier 2026 Jingle call screen -->
+    <dimen name="call_hero_avatar_size">132dp</dimen>
+    <dimen name="call_avatar_ring_padding">12dp</dimen>
+    <dimen name="call_avatar_ring_stroke">2dp</dimen>
+    <dimen name="call_glow_size">340dp</dimen>
+    <dimen name="call_control_button_size">58dp</dimen>
+    <dimen name="call_equalizer_bar_width">5dp</dimen>
+    <dimen name="call_equalizer_height">32dp</dimen>
+    <dimen name="call_pip_corner_radius">18dp</dimen>
+
+</resources>

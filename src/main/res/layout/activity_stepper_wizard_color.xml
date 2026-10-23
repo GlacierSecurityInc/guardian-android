@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Onboarding — modernized. Replaces the 4-slide paginated stepper with a
+  single confident welcome screen: brand hero + value props all visible at
+  once, one CTA into the permissions wall.
+-->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/cc_bg"
+        android:fitsSystemWindows="true">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/app_bar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar"
+                style="@style/BlackToolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="?attr/actionBarSize" />
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/app_bar_layout"
+            android:fillViewport="true"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingHorizontal="24dp"
+                android:paddingTop="28dp"
+                android:paddingBottom="24dp">
+
+                <ImageView
+                    style="@style/OnboardingHeroIcon"
+                    android:contentDescription="@null"
+                    app:srcCompat="@drawable/ic_glacier_brand" />
+
+                <TextView
+                    style="@style/OnboardingHeroTitle"
+                    android:text="@string/welcome_to_glacier" />
+
+                <TextView
+                    style="@style/OnboardingHeroSubtitle"
+                    android:text="@string/onboarding_welcome_subtitle" />
+
+                <!-- Private by design -->
+                <LinearLayout style="@style/OnboardingCardRow" android:layout_marginTop="28dp">
+
+                    <FrameLayout style="@style/OnboardingCardIconTile">
+
+                        <ImageView
+                            style="@style/OnboardingCardIcon"
+                            android:contentDescription="@null"
+                            android:src="@drawable/ic_cc_globe"
+                            app:tint="@color/cc_accent" />
+
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="14dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/OnboardingCardTitle"
+                            android:text="@string/feature_private_by_design_title" />
+
+                        <TextView
+                            style="@style/OnboardingCardDescription"
+                            android:text="@string/feature_private_by_design_desc" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <!-- For your eyes only -->
+                <LinearLayout style="@style/OnboardingCardRow">
+
+                    <FrameLayout style="@style/OnboardingCardIconTile">
+
+                        <ImageView
+                            style="@style/OnboardingCardIcon"
+                            android:contentDescription="@null"
+                            android:src="@drawable/ic_cc_shield_check"
+                            app:tint="@color/cc_accent" />
+
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="14dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/OnboardingCardTitle"
+                            android:text="@string/feature_eyes_only_title" />
+
+                        <TextView
+                            style="@style/OnboardingCardDescription"
+                            android:text="@string/feature_eyes_only_desc" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <!-- Even we can't read it -->
+                <LinearLayout style="@style/OnboardingCardRow">
+
+                    <FrameLayout style="@style/OnboardingCardIconTile">
+
+                        <ImageView
+                            style="@style/OnboardingCardIcon"
+                            android:contentDescription="@null"
+                            android:src="@drawable/ic_cc_lock"
+                            app:tint="@color/cc_accent" />
+
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="14dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/OnboardingCardTitle"
+                            android:text="@string/feature_cant_read_it_title" />
+
+                        <TextView
+                            style="@style/OnboardingCardDescription"
+                            android:text="@string/feature_cant_read_it_desc" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_got_it"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:layout_marginTop="28dp"
+                    android:background="@drawable/bg_btn_primary"
+                    android:backgroundTint="@null"
+                    app:backgroundTint="@null"
+                    android:fontFamily="@font/neue_haas_grotesk"
+                    android:gravity="center"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:text="@string/get_started"
+                    android:textAllCaps="false"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold"
+                    app:cornerRadius="14dp"
+                    app:icon="@drawable/ic_chevron_right_24"
+                    app:iconGravity="textEnd"
+                    app:iconTint="@android:color/white" />
+
+
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+    </RelativeLayout>
+</layout>

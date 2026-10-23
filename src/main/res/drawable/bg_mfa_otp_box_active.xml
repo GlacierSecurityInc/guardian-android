@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Segmented MFA code box · active (caret) state. Accent border with a soft
+     glow ring, mirroring the design's 0 0 0 4px accent-soft focus halo. -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape>
+            <solid android:color="@color/restore_accent_soft" />
+            <corners android:radius="16dp" />
+        </shape>
+    </item>
+    <item
+        android:left="3dp"
+        android:top="3dp"
+        android:right="3dp"
+        android:bottom="3dp">
+        <shape>
+            <solid android:color="@color/restore_surface" />
+            <corners android:radius="13dp" />
+            <stroke
+                android:width="2dp"
+                android:color="@color/restore_accent" />
+        </shape>
+    </item>
+</layer-list>

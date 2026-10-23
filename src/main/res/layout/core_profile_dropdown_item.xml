@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.textview.MaterialTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/TextAppearance.MaterialComponents.Body1"
+    android:id="@+id/core_profile_dropdown_item_text"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingStart="@dimen/card_padding_small"
+    android:paddingEnd="@dimen/card_padding_small"
+    android:paddingTop="@dimen/spacing_middle"
+    android:paddingBottom="@dimen/spacing_middle" />

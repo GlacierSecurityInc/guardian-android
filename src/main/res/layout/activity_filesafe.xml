@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        android:orientation="vertical">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar"
+                style="@style/BlackToolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="?attr/actionBarSize" />
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <include
+            android:id="@+id/offline_layout"
+            layout="@layout/toolbar_connection"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+
+        <include
+            android:id="@+id/return_to_glacier_call"
+            layout="@layout/view_incall_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+    <LinearLayout
+        android:id="@+id/filesafe_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/spacing_xmlarge"
+        android:paddingTop="@dimen/spacing_large">
+
+    <ImageView
+            android:id="@+id/filesafe_image"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:contentDescription="@string/upload_filesafe_illustration_cd"
+            android:src="@drawable/baseline_cloud_upload_24"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_large"
+            android:text="@string/upload_filesafe_description"
+            android:textAlignment="center"
+            android:textAppearance="?textAppearanceBodyMedium" />
+    </LinearLayout>
+        <!-- Scrollable content: file lists + add-more button -->
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="@dimen/spacing_slarge"
+                android:paddingTop="@dimen/spacing_large"
+                android:paddingBottom="@dimen/spacing_large">
+
+                <TextView
+                    android:id="@+id/selected_files_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/upload_filesafe_files_selected_message"
+                    android:textAppearance="?textAppearanceLabelMedium"
+                    android:letterSpacing="0.06"
+                    android:textAllCaps="true"
+                    android:visibility="gone" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_view_selected"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_small"
+                    android:clipToPadding="false"
+                    android:nestedScrollingEnabled="false"
+                    tools:listitem="@layout/item_filesafe_attachment" />
+
+                <TextView
+                    android:id="@+id/uploaded_files_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_large"
+                    android:text="@string/upload_filesafe_files_uploaded_message"
+                    android:textAppearance="?textAppearanceLabelMedium"
+                    android:letterSpacing="0.06"
+                    android:textAllCaps="true"
+                    android:visibility="gone" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_view_uploaded"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clipToPadding="false"
+                    android:nestedScrollingEnabled="false"
+                    android:visibility="gone"
+                    tools:listitem="@layout/item_filesafe_attachment" />
+
+                <!-- "Add more files" dashed button, always visible -->
+
+
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/select_files_button"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="@dimen/spacing_midlarge"
+            android:background="@drawable/bg_filesafe_add_more"
+            android:contentDescription="@string/upload_filesafe_select_button_cd"
+            android:text="@string/upload_filesafe_add_more_button_text"
+            android:textAppearance="?textAppearanceLabelLarge"
+            app:icon="@drawable/ic_add_24dp"
+            app:iconGravity="textStart"
+            app:cornerRadius="16dp" />
+
+        <!-- Sticky action bar: Cancel + Upload -->
+        <LinearLayout
+            android:id="@+id/upload_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="@dimen/spacing_slarge"
+            android:paddingBottom="@dimen/spacing_large"
+            android:paddingTop="@dimen/spacing_large">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/cancel_button"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:contentDescription="@string/upload_filesafe_cancel_button_cd"
+                android:text="@string/cancel" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/upload_button"
+                style="@style/Widget.Material3.Button.IconButton.Filled"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_large"
+                android:layout_weight="1"
+                android:contentDescription="@string/upload_filesafe_button_cd_upload"
+                android:text="@string/upload_btn_text" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</layout>

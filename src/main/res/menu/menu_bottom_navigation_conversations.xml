@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/chat_nav"
+        android:title="@string/content_description_chat_button"
+        android:icon="@drawable/ic_chat_24dp"/>
+
+    <item
+        android:id="@+id/contacts_nav"
+        android:title="@string/content_description_contacts"
+        android:icon="@drawable/baseline_group_add_24"/>
+
+    <item
+        android:id="@+id/phone_nav"
+        android:title="@string/content_description_phone"
+        android:icon="@drawable/baseline_local_phone_24"  />
+
+    <item
+        android:id="@+id/security_hub_nav"
+        android:title="@string/content_description_security_hub"
+        android:icon="@drawable/baseline_security_24" />
+
+    <item
+        android:id="@+id/settings_nav"
+        android:title="@string/content_description_settings"
+        android:icon="@drawable/ic_settings_24dp" />
+
+
+</menu>

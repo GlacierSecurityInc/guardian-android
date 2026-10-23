@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        >
+        <RelativeLayout
+            android:id="@+id/icon_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+
+            <ImageView
+                android:id="@+id/icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:adjustViewBounds="true"
+                android:padding="7dp"
+                android:src="@drawable/ic_voicemail_24dp" />
+            <ImageView
+                android:id="@+id/badge"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_alignTop="@id/icon"
+                android:layout_alignEnd="@id/icon"
+                android:src="@drawable/ic_red" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_toEndOf="@id/icon_view"
+            android:id="@+id/name_layout"
+
+
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/from"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="?colorControlNormal"
+                app:fontFamily="@font/neue_haas_grotesk"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/voicemail_details"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="10dp"
+            android:layout_below="@+id/name_layout"
+            android:layout_toLeftOf="@+id/deleteCheckBoxLayout"
+            android:gravity="center_vertical">
+
+            <LinearLayout
+                android:id="@+id/time_details"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="10dp"
+                android:orientation="vertical"
+                android:textAlignment="textEnd">
+
+                <TextView
+                    android:id="@+id/time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+
+                    android:ellipsize="end"
+                    android:gravity="center_vertical|end"
+                    android:lines="1"
+                    android:maxLines="1"
+                    android:textColor="?colorOnSurfaceVariant"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/duration"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical|end"
+                    android:textAlignment="viewEnd"
+                    android:lines="1"
+                    android:maxLines="1"
+                    android:textColor="?colorControlNormal"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/audioControls"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/voicemail_details"
+            android:layout_marginBottom="@dimen/spacing_large"
+            android:layout_toLeftOf="@+id/deleteCheckBoxLayout"
+            android:gravity="center">
+
+            <LinearLayout
+                android:id="@+id/playback_controls"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatImageButton
+                    android:id="@+id/play"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/spacing_small"
+                    android:background="@drawable/roundbutton_gray"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:srcCompat="@drawable/ic_play_arrow_24dp" />
+
+                <androidx.appcompat.widget.AppCompatImageButton
+                    android:id="@+id/pause"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/spacing_small"
+                    android:background="@drawable/roundbutton_gray"
+                    android:visibility="gone"
+                    app:srcCompat="@drawable/ic_pause_24dp" />
+
+                <TextView
+                    android:id="@+id/playback_speed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/spacing_small"
+                    android:layout_marginEnd="@dimen/spacing_small"
+                    android:background="@drawable/bg_audio_speed_chip"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:minHeight="32dp"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="4dp"
+                    android:text="@string/audio_speed_1x"
+                    android:textAppearance="?textAppearanceLabelLarge" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/control_icons"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="5dp"
+                android:layout_centerVertical="true"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatImageButton
+                    android:id="@+id/info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/spacing_small"
+                    android:background="@drawable/roundbutton_gray"
+
+                    app:srcCompat="@drawable/baseline_info_outline_24" />
+
+
+                <androidx.appcompat.widget.AppCompatImageButton
+                    android:id="@+id/call_back"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/spacing_small"
+                    android:background="@drawable/roundbutton"
+                    app:backgroundTint="@color/light_green_A700"
+                    app:srcCompat="@drawable/ic_phone_accept" />
+
+                <androidx.appcompat.widget.AppCompatImageButton
+                    android:id="@+id/delete"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/spacing_small"
+                    android:background="@drawable/roundbutton_gray"
+                    android:backgroundTint="@color/red_700"
+                    app:srcCompat="@drawable/ic_delete_24dp" />
+            </LinearLayout>
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/deleteCheckBoxLayout"
+            android:layout_width="60dp"
+            android:layout_height="40dp"
+            android:layout_margin="5dp"
+            android:layout_marginEnd="7dp"
+            android:layout_marginStart="7dp"
+            android:layout_alignParentRight="true"
+            android:visibility="gone">
+
+            <CheckBox
+                android:id="@+id/deleteCheckBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@drawable/checkbox"
+                android:clickable="true" />
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+    <ProgressBar
+        android:id="@+id/voicemail_progress"
+        style="?android:attr/progressBarStyleHorizontal"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_small"
+        android:layout_marginEnd="@dimen/spacing_small"
+        android:max="100" />
+
+    <View
+
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/disabled_color_dark"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"/>
+</LinearLayout>
+
+
+

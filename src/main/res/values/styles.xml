@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="PinBox">
+        <item name="android:layout_width">48dp</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:layout_margin">8dp</item>
+        <item name="android:background">@drawable/pin_box_bg</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:inputType">numberPassword</item>
+        <item name="android:maxLength">1</item>
+        <item name="android:textAlignment">center</item>
+    </style>
+
+    <style name="BlackBottomNav" parent="Widget.Material3.BottomNavigationView">
+        <!-- Black background with a small divider line -->
+        <item name="android:background">@drawable/bottom_nav_black</item>
+        <item name="elevation">0dp</item> <!-- Optional: remove shadow -->
+    </style>
+
+    <!-- Style to make MaterialToolbar use a surface background -->
+    <style name="BlackToolbar" parent="Widget.Material3.Toolbar">
+        <item name="android:background">?colorSurface</item>
+        <item name="titleTextColor">?colorOnSurface</item>
+    </style>
+
+    <style name="TextAppearance.Glacier.Toolbar.Phone" parent="TextAppearance.Material3.TitleLarge">
+        <item name="android:textSize">20sp</item>
+        <item name="android:fontFamily">@font/neue_haas_grotesk</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="BlackToolbarPhone" parent="BlackToolbar">
+        <item name="titleTextAppearance">@style/TextAppearance.Glacier.Toolbar.Phone</item>
+    </style>
+
+    <!-- Glacier 2026: pill-shaped extended FAB (18dp corner radius) -->
+    <style name="ShapeAppearance.Glacier.ExtendedFab" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">18dp</item>
+    </style>
+
+    <!-- Onboarding — modernized. Icon-tile + title + description row, matching
+         the Core Connection confirm-dialog row style. Used for the welcome
+         value-props and the permissions list. -->
+    <style name="OnboardingCardRow">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">12dp</item>
+        <item name="android:background">@drawable/cc_card_bg</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:paddingHorizontal">14dp</item>
+        <item name="android:paddingVertical">14dp</item>
+    </style>
+
+    <style name="OnboardingCardIconTile">
+        <item name="android:layout_width">40dp</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:background">@drawable/cc_icon_tile</item>
+        <item name="android:backgroundTint">@color/cc_accent_soft</item>
+    </style>
+
+    <style name="OnboardingCardIcon">
+        <item name="android:layout_width">20dp</item>
+        <item name="android:layout_height">20dp</item>
+        <item name="android:layout_gravity">center</item>
+    </style>
+
+    <style name="OnboardingCardTitle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/cc_text</item>
+        <item name="android:textSize">14.5sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="OnboardingCardDescription">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">2dp</item>
+        <item name="android:lineSpacingMultiplier">1.25</item>
+        <item name="android:textColor">@color/cc_muted</item>
+        <item name="android:textSize">12.5sp</item>
+    </style>
+
+    <!-- Onboarding hero header — shared between the Welcome and Permissions
+         screens so title/subtitle typography stays in lockstep. The brand
+         icon (@drawable/ic_glacier_brand, same mark as the login screen) is
+         only used on the Welcome screen. -->
+    <style name="OnboardingHeroIcon">
+        <item name="android:layout_width">64dp</item>
+        <item name="android:layout_height">64dp</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:padding">4dp</item>
+    </style>
+
+    <style name="OnboardingHeroTitle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">18dp</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:textColor">@color/cc_text</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="OnboardingHeroSubtitle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:textColor">@color/cc_muted</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+</resources>

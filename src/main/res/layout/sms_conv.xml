@@ -1,0 +1,176 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+   <LinearLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
+       android:fitsSystemWindows="true"
+
+       android:orientation="vertical">
+       <com.google.android.material.appbar.AppBarLayout
+           android:id="@+id/toolbar_layout"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content">
+           <com.google.android.material.appbar.MaterialToolbar style="@style/BlackToolbarPhone"
+               android:id="@+id/toolbar"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:minHeight="?attr/actionBarSize"
+                    app:titleCentered="false" />
+       </com.google.android.material.appbar.AppBarLayout>
+       <include  android:id="@+id/twilio_error"
+           layout="@layout/toolbar_twilio"
+           android:layout_height="wrap_content"
+           android:layout_width="match_parent"
+           android:visibility="gone"
+           />
+       <include  android:id="@+id/offline_layout"
+           layout="@layout/toolbar_connection"
+           android:layout_height="wrap_content"
+           android:layout_width="match_parent"
+           android:visibility="gone"
+           />
+       <include  android:id="@+id/console_error"
+           layout="@layout/toolbar_console"
+           android:layout_height="wrap_content"
+           android:layout_width="match_parent"
+           android:visibility="gone"
+           />
+
+
+
+       <include  android:id="@+id/return_to_external_call"
+           layout="@layout/external_call"
+           android:layout_height="wrap_content"
+           android:layout_width="match_parent"
+           android:visibility="gone"
+           />
+
+       <include  android:id="@+id/return_to_glacier_call"
+           layout="@layout/glacier_call"
+           android:layout_height="wrap_content"
+           android:layout_width="match_parent"
+           android:visibility="gone"
+           />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_gchat"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="16dp"
+            android:scrollbars="vertical" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/scroll_to_bottom_button"
+            style="?attr/floatingActionButtonSmallSurfaceStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/recycler_gchat"
+            android:layout_alignParentEnd="true"
+            android:contentDescription="@string/scroll_to_bottom"
+            android:src="@drawable/ic_keyboard_double_arrow_down_24dp"
+            android:visibility="gone"
+            app:useCompatPadding="true" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_alignParentTop="true"
+            android:rotation="180" />
+
+    </RelativeLayout>
+    <LinearLayout
+        android:id="@+id/send_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/spacing_medium">
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/attachbtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/spacing_small"
+            android:clickable="true"
+            android:gravity="center"
+            android:textColor="?attr/colorControlNormal"
+            app:elevation="1dp"
+            app:fabSize="mini"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_photo_24dp"
+            app:useCompatPadding="false" />
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/spacing_small"
+            android:layout_weight="1"
+            app:cardCornerRadius="18dp"
+            app:cardElevation="1dp"
+            android:minHeight="35dp">
+
+            <LinearLayout
+                android:id="@+id/layout_gchat_chatbox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="56dp"
+                android:paddingLeft="@dimen/spacing_small"
+                android:paddingRight="@dimen/spacing_small"
+                android:orientation="horizontal">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:visibility="gone"
+                    android:id="@+id/media_preview"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    tools:listitem="@layout/media_preview"
+                    android:orientation="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    android:paddingTop="8dp"
+                    android:requiresFadingEdge="horizontal"
+                    android:layout_alignParentLeft="true"
+                    android:layout_toLeftOf="@+id/button_gchat_send">
+                </androidx.recyclerview.widget.RecyclerView>
+
+                <EditText
+                    android:id="@+id/edit_gchat_message"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:hint="@string/send_unencrypted_message"
+                    android:textColor="?attr/colorControlNormal"
+                    android:padding="@dimen/spacing_middle"
+                    android:imeOptions="flagNoExtractUi|actionSend"
+                    android:inputType="textShortMessage|textMultiLine|textCapSentences|textNoSuggestions"
+                    android:maxLines="8"
+                    android:minHeight="48dp"
+                    android:minLines="1"
+                    style="@style/Widget.AppCompat.EditText"
+                    tools:ignore="Autofill"/>
+
+                <ImageView
+                    android:id="@+id/button_gchat_send"
+                    android:layout_width="64dp"
+                    android:layout_height="48dp"
+
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:padding="@dimen/spacing_middle"
+                    android:layout_gravity="center"
+                    app:srcCompat="@drawable/ic_send_24dp" />
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+
+
+    </LinearLayout>
+
+</LinearLayout>
+</layout>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+<!--    &lt;!&ndash; Translucent "glass" panel: the fading conversation list peeks through &ndash;&gt;-->
+<!--    <item>-->
+<!--        <shape android:shape="rectangle">-->
+<!--            <solid android:color="@color/glass_bottom_nav" />-->
+<!--        </shape>-->
+<!--    </item>-->
+</layer-list>

@@ -1,0 +1,837 @@
+// Top-level build file where you can add configuration options common to all
+// sub-projects/modules.
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:9.3.2'
+        classpath 'com.google.gms:google-services:4.5.0'
+    }
+    configurations.classpath {
+        resolutionStrategy.force(
+                'org.bouncycastle:bcprov-jdk18on:1.85',
+                'org.bouncycastle:bcpkix-jdk18on:1.85',
+                'org.bouncycastle:bcutil-jdk18on:1.85',
+                'org.bitbucket.b_c:jose4j:0.9.6',
+                'org.jdom:jdom2:2.0.6.1',
+                'org.apache.commons:commons-lang3:3.18.0',
+                'org.apache.httpcomponents:httpclient:4.5.14'
+        )
+        resolutionStrategy.eachDependency { d ->
+            if (d.requested.group == 'org.jetbrains.kotlin' && d.requested.name.startsWith('kotlin-gradle-plugin')) {
+                d.useVersion '2.4.20'
+            }
+        }
+    }
+}
+
+apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
+
+repositories {
+    google()
+    mavenCentral()
+    maven { url='https://jitpack.io'}
+    maven {
+        url = uri("https://api.mapbox.com/downloads/v2/releases/maven")
+        authentication {
+            basic(BasicAuthentication)
+        }
+        credentials {
+            username = "mapbox"
+            password = project.properties["MAPBOX_DOWNLOADS_TOKEN"] ?: ""
+        }
+    }
+}
+
+ext.securityPins = [
+        netty       : '4.1.137.Final',
+        bouncycastle: '1.85',
+        guavaAndroid: '33.6.0-android',
+        commonsLang : '3.18.0',
+        httpClient  : '4.5.14'
+]
+
+configurations.configureEach {
+    resolutionStrategy.eachDependency { details ->
+        def req = details.requested
+        switch (req.group) {
+            case 'io.netty':
+                details.useVersion securityPins.netty
+                break
+            case 'org.bouncycastle':
+                if (req.name.endsWith('-jdk18on')) {
+                    details.useVersion securityPins.bouncycastle
+                }
+                break
+            // Pin the -android variant explicitly. Guava publishes -jre and -android as
+            // separate modules, but each one's Gradle metadata carries variants for both
+            // environments, so the artifact is chosen by the consumer's
+            // org.gradle.jvm.environment attribute rather than by the version suffix: an
+            // Android classpath asking for 33.6.0-jre is still handed guava-33.6.0-android.jar.
+            // Forcing the suffix therefore does not change what ships -- it makes the
+            // coordinate in the dependency report agree with the jar, so that a report reading
+            // "-jre" stops looking like the app ships the desktop build, and it keeps a
+            // transitive bump from silently deciding the suffix for us.
+            case 'com.google.guava':
+                if (req.name == 'guava') {
+                    details.useVersion securityPins.guavaAndroid
+                }
+                break
+            case 'org.apache.commons':
+                if (req.name == 'commons-lang3') {
+                    details.useVersion securityPins.commonsLang
+                }
+                break
+            case 'org.apache.httpcomponents':
+                if (req.name == 'httpclient') {
+                    details.useVersion securityPins.httpClient
+                }
+                break
+        }
+    }
+}
+
+dependencies {
+    implementation 'androidx.collection:collection-jvm:1.6.0'
+    implementation fileTree(dir: './libs', include: ['*.aar', '*.jar'], exclude: [])
+
+    implementation 'org.jetbrains:annotations:26.1.0'
+    implementation 'androidx.lifecycle:lifecycle-process:2.11.0'
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.5'
+
+    implementation project(':libs:annotation')
+    annotationProcessor project(':libs:annotation-processor')
+
+    implementation 'androidx.viewpager:viewpager:1.1.0'
+    implementation 'androidx.viewpager2:viewpager2:1.1.0'
+
+    implementation('com.google.firebase:firebase-messaging:25.1.3') {
+        exclude group: 'com.google.firebase', module: 'firebase-core'
+        exclude group: 'com.google.firebase', module: 'firebase-analytics'
+        exclude group: 'com.google.firebase', module: 'firebase-measurement-connector'
+    }
+    implementation 'com.github.open-keychain.open-keychain:openpgp-api:v5.7.1'
+    implementation("com.github.CanHub:Android-Image-Cropper:2.0.0")
+    implementation 'androidx.appcompat:appcompat:1.8.0'
+    implementation 'androidx.exifinterface:exifinterface:1.4.2'
+    implementation 'androidx.cardview:cardview:1.0.0'
+    implementation "androidx.preference:preference:1.2.1"
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.2.0'
+    // Used directly; amplify core 2.42.0 stopped exporting it at compile scope.
+    implementation 'androidx.localbroadcastmanager:localbroadcastmanager:1.1.0'
+    implementation 'com.google.android.material:material:1.14.0'
+    implementation 'androidx.work:work-runtime:2.12.0'
+    implementation "io.github.oothp:android-pdf-viewer:3.2.0-beta06"
+
+    implementation "androidx.emoji2:emoji2:1.7.0"
+    implementation "androidx.emoji2:emoji2-emojipicker:1.7.0"
+
+    // Version comes from securityPins.bouncycastle, not a literal: the -jdk18on rule in
+    // the resolutionStrategy above rewrites every org.bouncycastle:*-jdk18on request,
+    // including this direct one, so a literal here could disagree with what resolves and
+    // an edit to it would silently do nothing. One source of truth instead.
+    implementation "org.bouncycastle:bcmail-jdk18on:${securityPins.bouncycastle}"
+    implementation 'com.google.zxing:core:3.5.4'
+    implementation 'org.minidns:minidns-client:1.1.1'
+    implementation 'org.minidns:minidns-dnssec:1.1.1'
+    implementation 'me.leolin:ShortcutBadger:1.1.22@aar'
+    implementation 'org.signal:libsignal-client:0.72.1'
+    implementation 'org.signal:libsignal-android:0.72.1'
+    implementation 'com.makeramen:roundedimageview:2.3.0'
+
+    //noinspection GradleDependency
+    implementation 'io.deepmedia.community:transcoder-android:0.11.2'
+
+    implementation 'org.jxmpp:jxmpp-jid:1.1.0'
+    implementation 'org.jxmpp:jxmpp-stringprep-libidn:1.1.0'
+
+    implementation "com.mapbox.maps:android-ndk27:11.16.2"
+    implementation 'org.hsluv:hsluv:1.0.2'
+    implementation 'org.conscrypt:conscrypt-android:2.7.0'
+    // Encrypted SQLite. The maintained AOSP fork, not the retired
+    // net.zetetic:android-database-sqlcipher -- this one's cursors implement
+    // android.database.Cursor, which keeps the type swap off every fromCursor() caller.
+    implementation 'net.zetetic:sqlcipher-android:4.19.0'
+    // Only runtime-scoped by sqlcipher's POM, but its SQLiteOpenHelper implements
+    // SupportSQLiteOpenHelper, so javac needs it to resolve our subclass.
+    implementation 'androidx.sqlite:sqlite:2.2.0'
+    implementation 'me.drakeet.support:toastcompat:1.1.0'
+    implementation "com.leinardi.android:speed-dial:3.3.0"
+
+    implementation "com.squareup.retrofit2:retrofit:3.0.0"
+    implementation "com.squareup.retrofit2:converter-gson:3.0.0"
+    implementation "com.squareup.okhttp3:okhttp:5.5.0"
+
+    implementation 'com.google.guava:guava:33.6.0-android'
+    implementation 'im.conversations.webrtc:webrtc-android:149.0.0'
+
+    implementation 'com.amplifyframework:core:2.42.0'
+    implementation 'com.amplifyframework:aws-auth-cognito:2.42.0'
+
+    implementation 'com.google.android.flexbox:flexbox:3.0.0'
+
+    implementation 'androidx.biometric:biometric:1.1.0'
+    implementation "androidx.security:security-crypto:1.1.0"
+
+    implementation("com.wireguard.android:tunnel:1.0.20260102")
+
+    implementation 'com.twilio:conversations-android:6.2.1'
+    implementation 'com.twilio:voice-android:6.10.4'
+    implementation 'org.apache.maven:maven-artifact:3.10.0'
+
+    implementation "com.google.android.gms:play-services-location:21.4.0"
+
+    // Local JVM unit tests (src/test). These never reach a device: they run the pure-Java
+    // logic of the app against the mockable android.jar.
+    // org.json must be declared here even though android.jar provides the same classes --
+    // the android.jar stubs throw on every call, and a testImplementation dependency lands
+    // ahead of the mockable jar on the unit-test classpath.
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.json:json:20260814'
+    testImplementation 'com.google.truth:truth:1.4.5'
+    // Mockito 5 uses the inline mock maker by default, so final classes and static
+    // methods are mockable without a separate agent artifact. Needs Java 11+; we run 17/21.
+    testImplementation 'org.mockito:mockito-core:5.24.0'
+    // Robolectric gives a test a real Android runtime (Context, Looper, SharedPreferences,
+    // resources) in the JVM, for the code that returnDefaultValues cannot fake its way past.
+    // Pair it with @RunWith(RobolectricTestRunner.class); plain tests keep running as before.
+    testImplementation 'org.robolectric:robolectric:4.17'
+    // ApplicationProvider/AndroidJUnit4 come from these. They are the same artifacts the
+    // instrumented tier uses below, which is what lets a test be written once and run in
+    // either tier -- under Robolectric here, on a device there.
+    testImplementation 'androidx.test:core:1.7.0'
+    testImplementation 'androidx.test.ext:junit:1.3.0'
+    // ---- Instrumented tests (src/androidTest, needs a device or emulator) ----
+    androidTestImplementation 'androidx.test.ext:junit:1.3.0'
+    androidTestImplementation 'androidx.test:core:1.7.0'
+    androidTestImplementation 'androidx.test:runner:1.7.0'
+    androidTestImplementation 'androidx.test:rules:1.7.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.7.0'
+    androidTestImplementation 'com.google.truth:truth:1.4.5'
+    // Drives the system UI outside the app's own process -- the runtime permission prompt,
+    // the VPN consent dialog, the Telecom account picker. Espresso cannot see any of those:
+    // it only knows about the view hierarchy of the activity under test.
+    androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.4.0'
+    // androidTestUtil, not androidTestImplementation: these two are APKs the build installs
+    // alongside the test APK rather than libraries it compiles against. They are what makes
+    // testOptions.execution = 'ANDROIDX_TEST_ORCHESTRATOR' work.
+    androidTestUtil 'androidx.test:orchestrator:1.6.1'
+    androidTestUtil 'androidx.test.services:test-services:1.6.0'
+}
+
+// ---- Robolectric's android-all jar ----------------------------------------------------
+// Robolectric does not get its Android runtime from the mockable android.jar. It downloads a
+// preinstrumented "android-all" jar with its own Maven resolver the first time a test runs,
+// into ~/.m2. That download ignores Gradle's --offline flag and its dependency cache, so the
+// suite would stop being runnable offline (and CI would pay for the download on every clean
+// runner). Instead: resolve the jar as a normal Gradle dependency, stage it in one directory,
+// and put Robolectric in offline mode pointed at that directory.
+//
+// The coordinate is not free-form -- Robolectric hardcodes the exact build it wants per API
+// level in org.robolectric.plugins.DefaultSdkProvider. For Robolectric 4.17, API 37 is
+// "17-robolectric-15733970-i7". Bumping Robolectric means re-checking this string, and adding
+// an SDK level to @Config(sdk = ...) means adding that level's jar here too.
+//
+// Gradle 9 separates configuration roles: the bucket that holds the dependency declaration
+// cannot be the one that gets resolved, so this is a dependencyScope/resolvable pair.
+//
+// One configuration per API level, not one configuration with several coordinates: the jars all
+// share the group:module org.robolectric:android-all-instrumented and differ only in version,
+// so Gradle's conflict resolution collapses them to a single version and the others vanish
+// without any error. Adding an @Config(sdk = ...) level means adding a pair here.
+configurations {
+    dependencyScope("robolectricSdk")
+    resolvable("robolectricSdkClasspath") {
+        extendsFrom configurations.robolectricSdk
+    }
+    dependencyScope("robolectricSdk30")
+    resolvable("robolectricSdk30Classpath") {
+        extendsFrom configurations.robolectricSdk30
+    }
+}
+
+dependencies {
+    robolectricSdk 'org.robolectric:android-all-instrumented:17-robolectric-15733970-i7'
+    // API 30 (Android 11). minSdk is 30 and LocationScanner's pre-S registration branch is
+    // unreachable on every attached device and emulator, all of which are API 33 or newer.
+    robolectricSdk30 'org.robolectric:android-all-instrumented:11-robolectric-6757853-i7'
+}
+
+def robolectricSdkDir = layout.buildDirectory.dir("robolectric-sdks")
+def stageRobolectricSdk = tasks.register('stageRobolectricSdk', Sync) {
+    from configurations.robolectricSdkClasspath
+    from configurations.robolectricSdk30Classpath
+    into robolectricSdkDir
+}
+
+// ---- Conscrypt: two artifacts, one package ---------------------------------------------
+// Robolectric installs a real Conscrypt security provider while it boots the Android
+// environment, and depends on org.conscrypt:conscrypt-openjdk-uber, whose jar carries the
+// native library for the JVM. The app ships org.conscrypt:conscrypt-android, which exposes the
+// same org.conscrypt package but expects libconscrypt_jni.so out of the APK -- on the JVM there
+// is nothing to load. Both land on the unit-test runtime classpath, so which one wins decides
+// whether Robolectric can start at all, and the Android one wins: every Robolectric test dies
+// in beforeTest with "UnsatisfiedLinkError: no conscrypt_jni in java.library.path".
+//
+// Drop the Android artifact from the unit-test runtime classpath so the OpenJDK build is the
+// only org.conscrypt on it. The two expose the same Conscrypt API, so app code that calls it
+// (utils/SSLSockets, crypto/sasl/ChannelBindingMechanism) still links. Scoped to unit tests by
+// name: the app itself and the instrumented tier keep conscrypt-android, which is what they
+// need on a real device.
+configurations.matching { it.name.endsWith("UnitTestRuntimeClasspath") }.configureEach {
+    exclude group: 'org.conscrypt', module: 'conscrypt-android'
+    // Same symptom as conscrypt, but note there is no JVM twin for SQLCipher: this trades
+    // UnsatisfiedLinkError for NoClassDefFoundError in any JVM test that loads a class importing
+    // net.zetetic. Safe only while the JVM tier loads no database class, which holds today. If one
+    // starts to, move that test to src/androidTest rather than dropping this exclusion.
+    exclude group: 'net.zetetic', module: 'sqlcipher-android'
+}
+
+apply plugin: 'jacoco'
+
+jacoco {
+    toolVersion = '0.8.13'
+}
+
+def coverageRequested = project.hasProperty('coverageReport')
+
+tasks.withType(Test).configureEach {
+    jacoco {
+        enabled = coverageRequested
+
+        includeNoLocationClasses = true
+
+        excludes = ['jdk.internal.*']
+    }
+}
+
+def coverageExcludedClasses = [
+        '**/R.class',
+        '**/R$*.class',
+        '**/BuildConfig.*',
+        '**/Manifest*.*',
+        '**/*_Impl*.*',
+        '**/databinding/**',
+        '**/DataBinder*.*',
+        '**/*$ViewInjector*.*',
+        '**/*$ViewBinder*.*',
+]
+
+afterEvaluate {
+    ['playstore'].each { flavor ->
+        def capitalised = "${flavor.capitalize()}Debug"
+        def testTask = tasks.named("test${capitalised}UnitTest", Test)
+
+        def jvmExecutionData = testTask.map {
+            it.extensions.getByType(JacocoTaskExtension).destinationFile
+        }
+
+        def deviceExecutionData = files(
+                layout.buildDirectory
+                        .dir("intermediates/managed_device_code_coverage/${flavor}DebugAndroidTest")
+                        .map { fileTree(it.asFile) { include '**/*.ec' } },
+                layout.buildDirectory
+                        .dir("outputs/code_coverage/${flavor}DebugAndroidTest")
+                        .map { fileTree(it.asFile) { include '**/*.ec' } })
+
+        def coverageClassDirs = tasks.named("compile${capitalised}JavaWithJavac", JavaCompile)
+                .map {
+                    it.destinationDirectory.get().asFileTree
+                            .matching { exclude coverageExcludedClasses }
+                }
+
+        def coverageSourceDirs = files("src/main/java", "src/${flavor}/java", "src/debug/java")
+
+        def reportSetUp = { JacocoReport task ->
+            task.group = 'verification'
+            task.classDirectories.setFrom(coverageClassDirs)
+            task.sourceDirectories.setFrom(coverageSourceDirs)
+            task.reports.xml.required = true
+            task.reports.html.required = true
+            task.inputs.property('coverageRequested', coverageRequested)
+        }
+
+        def registerGuard = { String reportName, List producers, Closure<String> complaint ->
+            tasks.register("${reportName}Check") {
+                description = "Explains why ${reportName} would have nothing to read."
+                producers.each { mustRunAfter it }
+                doLast {
+                    def message = complaint()
+                    if (message) {
+                        throw new GradleException(message)
+                    }
+                }
+            }
+        }
+
+        def instrumentedTestTasks = tasks.matching {
+            it.name.endsWith("${capitalised}AndroidTest")
+        }
+
+        def jvmGuard = registerGuard("jacoco${capitalised}Report", [testTask]) {
+            if (!coverageRequested) {
+                return "No coverage data: re-run with -PcoverageReport so the JaCoCo agent is " +
+                        "attached to test${capitalised}UnitTest."
+            }
+            if (!files(jvmExecutionData).any { it.exists() }) {
+                logger.warn("jacoco${capitalised}Report: no .exec from test${capitalised}" +
+                        "UnitTest although -PcoverageReport was passed, so no report will be " +
+                        "written. Expected if the tests never ran; otherwise the agent did not " +
+                        "attach.")
+            }
+            return null
+        }
+
+        tasks.register("jacoco${capitalised}Report", JacocoReport) {
+            description = "Coverage for test${capitalised}UnitTest (JVM tier). Requires -PcoverageReport."
+            reportSetUp(it)
+            dependsOn testTask, jvmGuard
+            executionData.setFrom(jvmExecutionData)
+        }
+
+        def androidTestGuard = registerGuard("jacoco${capitalised}AndroidTestReport", [instrumentedTestTasks]) {
+            deviceExecutionData.isEmpty()
+                    ? "No instrumented coverage data under build/intermediates/" +
+                      "managed_device_code_coverage/${flavor}DebugAndroidTest or " +
+                      "build/outputs/code_coverage/${flavor}DebugAndroidTest.\n" +
+                      "Run a device task with -PcoverageReport first, e.g.\n" +
+                      "  ./gradlew api34Atd${capitalised}AndroidTest --rerun -PcoverageReport\n" +
+                      "A passing run that leaves that directory empty means clearPackageData was " +
+                      "still on -- -PcoverageReport turns it off, so check it was actually passed."
+                    : null
+        }
+
+        tasks.register("jacoco${capitalised}AndroidTestReport", JacocoReport) {
+            description = "Coverage for the src/androidTest tier on whichever devices have run. " +
+                    "Requires -PcoverageReport on the run that produced the data."
+            reportSetUp(it)
+            dependsOn androidTestGuard
+            mustRunAfter instrumentedTestTasks
+            executionData.setFrom(deviceExecutionData)
+        }
+
+        def combinedGuard = registerGuard("jacoco${capitalised}CombinedReport", [testTask, instrumentedTestTasks]) {
+            (files(jvmExecutionData).any { it.exists() } || !deviceExecutionData.isEmpty()) ? null :
+                    "No coverage data from either tier. Run the ones you want with " +
+                    "-PcoverageReport first, e.g.\n" +
+                    "  ./gradlew test${capitalised}UnitTest -PcoverageReport\n" +
+                    "  ./gradlew api34Atd${capitalised}AndroidTest --rerun -PcoverageReport"
+        }
+
+        tasks.register("jacoco${capitalised}CombinedReport", JacocoReport) {
+            description = "Coverage for both tiers together (JVM + instrumented). " +
+                    "Requires -PcoverageReport; reads whatever execution data exists."
+            reportSetUp(it)
+            dependsOn combinedGuard
+            mustRunAfter instrumentedTestTasks
+            executionData.setFrom(jvmExecutionData, deviceExecutionData)
+        }
+    }
+}
+
+android {
+    namespace = 'com.glaciersecurity.glaciermessenger'
+    compileSdk = 37
+    // Pin an NDK we actually have installed. Without this, AGP looks for its own default
+    // (28.2.13676358), fails to find it, and `stripReleaseDebugSymbols` silently no-ops:
+    //   "Unable to strip the following libraries, packaging them as they are: ..."
+    // That was harmless while every dependency shipped pre-stripped .so files, but
+    // org.signal:libsignal-android ships libsignal_jni.so with full DWARF debug info --
+    // 63 MB on arm64 versus 5.8 MB stripped, and ~245 MB across all four ABIs. Losing the
+    // strip step is what took the release APK from ~340 MB in 7.1 to ~482 MB in 7.2.
+    ndkVersion = "27.0.12077973"
+
+    defaultConfig {
+        minSdkVersion 30
+        targetSdkVersion 37
+        versionCode = 7033
+        versionName = "7.3.3"
+        applicationId = "com.glaciersecurity.glaciermessenger"
+        resValue "string", "applicationId", applicationId
+        def appName = "Guardian"
+        resValue "string", "app_name", appName
+        buildConfigField "String", "APP_NAME", "\"$appName\""
+        buildConfigField "String", "PRIVACY_POLICY", "\"https://glacier.chat/legal\""
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        // Paired with the ANDROIDX_TEST_ORCHESTRATOR execution mode below: the orchestrator
+        // runs `pm clear` between test methods, so nothing a test writes to the app's
+        // SharedPreferences, the `history` database or its files directory can reach the next
+        // one. Every instrumented test here therefore starts from a freshly installed app and
+        // has to seed whatever state it needs -- except under -PcoverageReport, which turns
+        // this off because the JaCoCo agent writes into the directory `pm clear` removes.
+        testInstrumentationRunnerArguments clearPackageData: coverageRequested ? 'false' : 'true'
+    }
+
+    flavorDimensions += "distribution"
+
+    productFlavors {
+        playstore {
+            dimension = "distribution"
+        }
+    }
+
+    // Which Glacier backend a debug build talks to, read by Endpoints.environment().
+    // -PglacierApiEnvironment=STAGING|DEV|PROD ; release builds always resolve to PROD.
+    def glacierApiEnvironment =
+            (project.findProperty("glacierApiEnvironment") ?: "PROD").toString().toUpperCase()
+    // Drops certificate pinning so instrumented fault-injection tests can reach a local
+    // MockWebServer. Debug-only and off unless explicitly asked for:
+    // -PglacierInsecureTestBackend=true
+    def glacierInsecureTestBackend =
+            "true" == project.findProperty("glacierInsecureTestBackend").toString()
+
+    // Answers the whole Glacier mobile API from memory instead of reaching the console, so the
+    // phone module, org sync and Security Hub can be driven without a login and without Twilio.
+    // Debug-only and off unless explicitly asked for:
+    // -PglacierFakeBackend=true
+    def glacierFakeBackend =
+            "true" == project.findProperty("glacierFakeBackend").toString()
+
+    // Refuses the Glacier API calls that spend money or destroy data, so a debug build can be
+    // pointed at a real tenant without one stray tap releasing a number. Debug-only:
+    // -PglacierProdWriteGuard=true
+    def glacierProdWriteGuard =
+            "true" == project.findProperty("glacierProdWriteGuard").toString()
+
+    configurations {
+        implementation.exclude group: 'org.jetbrains' , module:'annotations'
+    }
+
+    dataBinding {
+        enabled = true
+    }
+
+    testOptions {
+        // Espresso's synchronisation cannot see window animations, and a device with the
+        // developer animation scales left at 1x turns view assertions into a race. AGP turns
+        // them off around the run and restores them afterwards.
+        animationsDisabled = true
+
+        // Run each test method in its own process.
+        //
+        // This suite touches process-wide singletons -- DatabaseBackend.getInstance() caches
+        // one SQLiteOpenHelper for the life of the process, KeystoreCredentialStore writes
+        // AndroidKeyStore entries that outlive any single test, WorkManager initialises once --
+        // so tests that share a process share that state, and ordering starts to decide
+        // outcomes. It also means a native crash (libsignal, conscrypt, SQLite) takes down
+        // only the test that caused it instead of everything queued behind it, which is what
+        // makes an overnight soak run worth reading in the morning.
+        //
+        // Costs roughly a second per test. See src/androidTest/README.md for how to turn it
+        // off for a fast single-class iteration loop.
+        execution = 'ANDROIDX_TEST_ORCHESTRATOR'
+
+        // ---- Emulator fleet ----------------------------------------------------------
+        // Gradle-managed devices are created, booted, used and torn down by the build, in
+        // ~/.android/avd/gradle-managed. They are the reason this suite can run unattended:
+        // AVDs under ~/.android/avd can be shared with other builds and installed over mid-run,
+        // while these are private to the build.
+        //
+        // Each device below maps to a system image that is already installed locally, so
+        // `--offline` works. `matrix` is the exception -- api30 is the minSdk floor and its
+        // image is downloaded on first use.
+        //
+        // Tasks (flavor-prefixed, e.g. playstore):
+        //   ./gradlew api34AtdPlaystoreDebugAndroidTest       one device
+        //   ./gradlew fleetGroupPlaystoreDebugAndroidTest     the default fleet
+        //   ./gradlew matrixGroupPlaystoreDebugAndroidTest    every API level, incl. minSdk
+        //
+        // A group boots its devices concurrently (bounded by maxConcurrentDevices in
+        // gradle.properties) but then runs the suite on them one device after another -- they are
+        // ordinary tasks in a single Gradle project. Budget a group run at roughly the number of
+        // devices times a single-device run.
+        managedDevices {
+            localDevices {
+                // API 34 is a real branch point in this code, not just an old version to
+                // support: services/CallIntegration.java carries a whole second Telecom
+                // audio-routing implementation behind UPSIDE_DOWN_CAKE. The ATD ("automated
+                // test device") image has no Play Store, no Google apps and no UI shell, which
+                // makes it the fastest thing to boot and the least likely to interrupt a run
+                // with a system dialog.
+                api34Atd {
+                    device = "Pixel 6"
+                    apiLevel = 34
+                    systemImageSource = "aosp-atd"
+                }
+                // Same API level with Google APIs present. Anything that resolves a Play
+                // Services class -- Firebase messaging, play-services-location, the Telecom
+                // integration's account registration -- behaves differently on an ATD image,
+                // so the pair is deliberate rather than redundant.
+                api34Google {
+                    device = "Pixel 6"
+                    apiLevel = 34
+                    systemImageSource = "google"
+                }
+                // Current-generation target. targetSdkVersion is 37, but the only API 37 image
+                // installed here is the 16 KB-page playstore variant, which the managed-device
+                // resolver does not address by name; API 36 is the closest image that is
+                // already on disk. The physical fleet covers 37.
+                api36 {
+                    device = "Pixel 8"
+                    apiLevel = 36
+                    systemImageSource = "google_apis_playstore"
+                }
+                // minSdkVersion. Nothing else in the fleet can catch an API call that was
+                // added after 30 and is reached without a version guard -- lint finds the
+                // obvious ones, but not a call made through a support library. Downloads its
+                // system image on first use.
+                api30 {
+                    device = "Pixel 2"
+                    apiLevel = 30
+                    systemImageSource = "aosp-atd"
+                }
+                // The only device here wide enough to resolve values-sw600dp. Every other
+                // profile is a phone, so without this the whole tablet half of the app is
+                // untested: OrientationLock deliberately does *not* lock tablets (the two-pane
+                // conversations layout is w945dp and only reachable in landscape), and a change
+                // that locked them would pass on all four phone profiles. Same reasoning applies
+                // to any future layout assertion that branches on screen width.
+                tablet34 {
+                    device = "Pixel Tablet"
+                    apiLevel = 34
+                    systemImageSource = "aosp-atd"
+                }
+            }
+            groups {
+                // The everyday fleet: the API 34 branch point and a current device, both
+                // backed by locally installed images.
+                fleet {
+                    targetDevices.add(localDevices.api34Atd)
+                    targetDevices.add(localDevices.api36)
+                }
+                // Everything: the minSdk floor, both API 34 images, a current phone and the
+                // one tablet. This is the overnight target, and the only group that covers the
+                // sw600dp branch.
+                matrix {
+                    targetDevices.add(localDevices.api30)
+                    targetDevices.add(localDevices.api34Atd)
+                    targetDevices.add(localDevices.api34Google)
+                    targetDevices.add(localDevices.api36)
+                    targetDevices.add(localDevices.tablet34)
+                }
+            }
+        }
+
+        unitTests {
+            // Un-stubbed android.jar methods return null/0 instead of throwing
+            // "not mocked", so a test only has to stub the Android calls it cares about.
+            returnDefaultValues = true
+            // Robolectric reads the merged manifest, resources and assets of the variant under
+            // test through the com/android/tools/test_config.properties file AGP only writes
+            // when this is on. Without it Robolectric fails at startup.
+            includeAndroidResources = true
+            all {
+                it.testLogging {
+                    events "passed", "skipped", "failed"
+                    exceptionFormat "full"
+                }
+                // See the stageRobolectricSdk task above: keeps `test --offline` working.
+                it.dependsOn(stageRobolectricSdk)
+                it.systemProperty 'robolectric.offline', 'true'
+                it.systemProperty 'robolectric.dependency.dir',
+                        robolectricSdkDir.get().asFile.absolutePath
+                // Robolectric runs real framework code, which reaches into JDK internals that
+                // have been closed off since the module system. Without these the sandbox fails
+                // to boot -- on JDK 21 the first casualty is ApplicationSharedMemory.create(),
+                // which needs jdk.internal.access.SharedSecrets and otherwise dies with
+                // "Failed to interact with raw FileDescriptor internals; perhaps JRE has changed?"
+                it.jvmArgs += [
+                        '--add-opens=java.base/java.lang=ALL-UNNAMED',
+                        '--add-opens=java.base/java.util=ALL-UNNAMED',
+                        '--add-opens=java.base/java.io=ALL-UNNAMED',
+                        '--add-opens=java.base/java.net=ALL-UNNAMED',
+                        '--add-opens=java.base/java.security=ALL-UNNAMED',
+                        '--add-opens=java.base/java.text=ALL-UNNAMED',
+                        '--add-opens=java.base/jdk.internal.access=ALL-UNNAMED',
+                ]
+            }
+        }
+    }
+
+    compileOptions {
+        coreLibraryDesugaringEnabled = true
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    def keystorePropertiesFile = rootProject.file("keystore.properties")
+    if (keystorePropertiesFile.exists()) {
+        def props = new Properties()
+        props.load(new FileInputStream(keystorePropertiesFile))
+
+        signingConfigs {
+            release {
+                storeFile = file(props['storeFile'])
+                storePassword = props['storePassword']
+                keyAlias = props['keyAlias']
+                keyPassword = props['keyPassword']
+            }
+        }
+        buildTypes.release.signingConfig = signingConfigs.release
+    }
+
+    buildTypes {
+        debug {
+            buildConfigField "String", "API_ENVIRONMENT", "\"$glacierApiEnvironment\""
+            buildConfigField "boolean", "ALLOW_INSECURE_TEST_BACKEND", "$glacierInsecureTestBackend"
+            buildConfigField "boolean", "FAKE_BACKEND", "$glacierFakeBackend"
+            buildConfigField "boolean", "PROD_WRITE_GUARD", "$glacierProdWriteGuard"
+
+            enableAndroidTestCoverage = coverageRequested
+        }
+        release {
+            ndk {
+                // Ship only the ABIs real phones use. x86/x86_64 exist for emulators and
+                // the odd Chromebook, and they are the two *largest* copies of every
+                // native library we bundle -- together roughly 40% of the native payload.
+                // Debug builds are left alone so x86_64 emulators still work.
+                abiFilters += ['armeabi-v7a', 'arm64-v8a']
+            }
+            shrinkResources = true
+            minifyEnabled = true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            // Hardcoded, not derived from the properties above: a release build can never be
+            // pointed at staging or run without pinning, however the build was invoked.
+            buildConfigField "String", "API_ENVIRONMENT", "\"PROD\""
+            buildConfigField "boolean", "ALLOW_INSECURE_TEST_BACKEND", "false"
+            buildConfigField "boolean", "FAKE_BACKEND", "false"
+            buildConfigField "boolean", "PROD_WRITE_GUARD", "false"
+        }
+    }
+
+    packaging {
+        resources {
+            excludes += ['META-INF/BCKEY.DSA', 'META-INF/BCKEY.SF', 'META-INF/versions/9/OSGI-INF/MANIFEST.MF']
+            pickFirsts += ['META-INF/LICENSE.md']
+            // org.signal:libsignal-client bundles desktop-JVM native libraries (for
+            // Linux/Windows/macOS) as loose files at the root of its jar, meant for
+            // server/testing use off Android. They aren't nested under a lib/<abi>/ path,
+            // so packaging.jniLibs won't touch them; they land here as plain resources
+            // instead. The real Android-ABI natives come from org.signal:libsignal-android,
+            // so these desktop binaries (and the *_testing variants) are just dead weight.
+            excludes += [
+                'libsignal_jni_amd64.so', 'libsignal_jni_testing_amd64.so',
+                '**/*.dylib', '**/*.dll'
+            ]
+        }
+        jniLibs {
+            pickFirsts += ['**/libc++_shared.so']
+            excludes += ['**/*.dylib', '**/*.dll']
+            // libsignal-android ships a testing-only native alongside the real one; it's
+            // unused by the app and roughly doubles the per-ABI native lib size.
+            excludes += ['**/libsignal_jni_testing.so']
+        }
+    }
+    lint {
+        disable 'MissingTranslation', 'InvalidPackage', 'AppCompatResource'
+    }
+    buildFeatures {
+        buildConfig = true
+        resValues = true
+    }
+}
+
+androidComponents {
+    onVariants(selector().all()) { variant ->
+        variant.outputs.each { output ->
+            output.versionCode.set(100 * android.defaultConfig.versionCode)
+            if (variant.buildType == "release") {
+                final def flavor = variant.productFlavors.collect { it.second }.join("-")
+                output.outputFileName.set("glacierGuardian-${android.defaultConfig.versionName}-${flavor}-release.apk")
+            }
+        }
+    }
+}
+
+// AGP only *warns* when the pinned NDK is missing -- "Unable to strip the following
+// libraries, packaging them as they are" -- and the build still succeeds. That silent
+// failure is exactly how 7.2 shipped a 482 MB APK. Make it loud for release builds.
+// The flavour prefixes the task name (stripPlaystoreReleaseDebugSymbols), so match on the
+// pattern rather than a literal.
+tasks.matching { it.name ==~ /strip[A-Z]\w*ReleaseDebugSymbols/ }.configureEach {
+    doFirst {
+        def sdkDir = androidComponents.sdkComponents.sdkDirectory.get().asFile
+        def ndkDir = new File(sdkDir, "ndk/${android.ndkVersion}")
+        if (!ndkDir.isDirectory()) {
+            throw new GradleException(
+                "NDK ${android.ndkVersion} is not installed at ${ndkDir}.\n" +
+                "Without it AGP cannot strip native debug symbols and the release APK grows " +
+                "by roughly 220 MB (libsignal_jni.so alone goes from 5.8 MB to 63 MB per ABI).\n" +
+                "Install it with:  sdkmanager \"ndk;${android.ndkVersion}\"")
+        }
+    }
+}
+
+// Native libraries look Java classes up by name (JNI FindClass, jni_zero's class loader), which R8
+// cannot see. webrtc 149 made every release build abort at the first call that way, while debug
+// builds, which skip R8, worked. Read the class names embedded in the packaged .so files and fail
+// if R8 removed or renamed one. Class-level only: a stripped member is not caught.
+['playstore'].each { flavor ->
+    def variant = "${flavor}Release"
+    def cap = variant.capitalize()
+    tasks.register("check${cap}NativeClassKeeps") {
+        group = 'verification'
+        description = "Fails if R8 removed or renamed a class that a native library in ${variant} names."
+        // Read paths off the tasks' declared outputs: under AGP 9 the fresh mapping.txt is an
+        // intermediate, and build/outputs/mapping only gets one from a full assemble.
+        def r8Outputs = tasks.named("minify${cap}WithR8").map { it.outputs.files }
+        def nativeOutputs = tasks.named("merge${cap}NativeLibs").map { it.outputs.files }
+        inputs.files(r8Outputs)
+        inputs.files(nativeOutputs)
+        doLast {
+            def r8Output = { String name ->
+                def file = r8Outputs.get().files.find { it.name == name }
+                if (file == null || !file.isFile()) {
+                    throw new GradleException("R8 produced no ${name} for ${variant}")
+                }
+                file
+            }
+            def abis = nativeOutputs.get().files
+                    .collect { new File(it, 'lib') }
+                    .findAll { it.isDirectory() }
+                    .collectMany { it.listFiles().findAll { abi -> abi.isDirectory() } }
+            // every ABI carries the same libraries; one is enough
+            def abi = abis.find { it.name == 'arm64-v8a' } ?: abis.find()
+            if (abi == null) {
+                throw new GradleException("No native libraries found for ${variant}")
+            }
+            def pattern = ~/(?<![A-Za-z0-9_\/.$])(?:org|com|net|io|im|eu|de|tvo)[\/.][A-Za-z0-9_$]+(?:[\/.][A-Za-z0-9_$]+)+/
+            def named = [:].withDefault { [] as SortedSet }
+            abi.listFiles().findAll { it.name.endsWith('.so') }.each { so ->
+                (new String(so.bytes, 'ISO-8859-1') =~ pattern).each { match ->
+                    named[match.replace('/', '.')] << so.name
+                }
+            }
+            def removed = r8Output('usage.txt').readLines()
+                    .findAll { !it.startsWith(' ') && !it.endsWith(':') }
+                    .collect { it.trim() } as Set
+            def renamed = [:]
+            r8Output('mapping.txt').eachLine { line ->
+                def m = line =~ /^(\S+) -> (\S+):$/
+                if (m.matches() && m.group(1) != m.group(2)) {
+                    renamed[m.group(1)] = m.group(2)
+                }
+            }
+            def broken = named.keySet().findAll { removed.contains(it) || renamed.containsKey(it) }.sort()
+            if (!broken.isEmpty()) {
+                def report = broken.collect { name ->
+                    "  ${name} (${renamed.containsKey(name) ? "renamed to ${renamed[name]}" : 'removed'}), named in ${named[name].join(', ')}"
+                }.join('\n')
+                throw new GradleException(
+                        "R8 stripped classes that native code looks up by name; the release build will " +
+                        "crash when that code runs. Add a -keep rule to proguard-rules.pro:\n${report}")
+            }
+            logger.lifecycle("${named.size()} class names in ${abi.name} native libraries; none removed or renamed by R8.")
+        }
+    }
+}
+
+// Gradle 9 removed the legacy `archivesBaseName` convention property (it used to be
+// appended to inside defaultConfig). Set the archive base name via the base plugin so
+// build outputs stay named "<project>-<versionName>", e.g. GlacierChat-7.1.
+base {
+    archivesName =  "glacierGuardian-" + android.defaultConfig.versionName
+}

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Ambient tone glow behind the call-screen avatar. White radial gradient fading
+  to transparent; tinted per-contact tone at runtime via a SRC_IN color filter
+  (the fading alpha channel is preserved, only the RGB is replaced).
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <gradient
+        android:type="radial"
+        android:gradientRadius="50%p"
+        android:startColor="#FFFFFFFF"
+        android:centerColor="#80FFFFFF"
+        android:endColor="#00FFFFFF" />
+</shape>

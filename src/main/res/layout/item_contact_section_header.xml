@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- A–Z section header for the modernized contacts list. -->
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/section_letter"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingStart="20dp"
+    android:paddingEnd="20dp"
+    android:paddingTop="10dp"
+    android:paddingBottom="4dp"
+    android:fontFamily="@font/neue_haas_grotesk"
+    android:textColor="?attr/colorPrimary"
+    android:textSize="12sp"
+    android:textStyle="bold"
+    android:letterSpacing="0.04"
+    tools:text="A"
+    xmlns:tools="http://schemas.android.com/tools" />

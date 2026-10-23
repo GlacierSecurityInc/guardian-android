@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Direction B keypad: a full-width 3-column grid that fills the available
+     height. Each key shows a large digit with a small letter sub-label, with
+     a transparent Digit button overlaid so all of the existing dial / DTMF /
+     long-press logic keeps working unchanged. -->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:id="@+id/numpad"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp">
+
+        <!-- Row 1 -->
+        <LinearLayout
+            android:id="@+id/row1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:weightSum="3">
+
+            <FrameLayout style="@style/DialerKeyCell">
+                <LinearLayout style="@style/DialerKeyLabel">
+                    <TextView style="@style/DialerKeyDigit" android:text="1" />
+                    <TextView style="@style/DialerKeyLetters" android:text="" />
+                </LinearLayout>
+                <com.glaciersecurity.glaciermessenger.ui.util.Digit
+                    android:id="@+id/Digit1"
+                    style="@style/DialerDigit"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:soundEffectsEnabled="true"
+                    android:text="1" />
+            </FrameLayout>
+
+            <FrameLayout style="@style/DialerKeyCell">
+                <LinearLayout style="@style/DialerKeyLabel">
+                    <TextView style="@style/DialerKeyDigit" android:text="2" />
+                    <TextView style="@style/DialerKeyLetters" android:text="ABC" />
+                </LinearLayout>
+                <com.glaciersecurity.glaciermessenger.ui.util.Digit
+                    android:id="@+id/Digit2"
+                    style="@style/DialerDigit"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:soundEffectsEnabled="true"
+                    android:text="2" />
+            </FrameLayout>
+
+            <FrameLayout style="@style/DialerKeyCell">
+                <LinearLayout style="@style/DialerKeyLabel">
+                    <TextView style="@style/DialerKeyDigit" android:text="3" />
+                    <TextView style="@style/DialerKeyLetters" android:text="DEF" />
+                </LinearLayout>
+                <com.glaciersecurity.glaciermessenger.ui.util.Digit
+                    android:id="@+id/Digit3"
+                    style="@style/DialerDigit"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:soundEffectsEnabled="true"
+                    android:text="3" />
+            </FrameLayout>
+        </LinearLayout>
+
+        <!-- Row 2 -->
+        <LinearLayout
+            android:id="@+id/row2"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:weightSum="3">
+
+            <FrameLayout style="@style/DialerKeyCell">
+                <LinearLayout style="@style/DialerKeyLabel">
+                    <TextView style="@style/DialerKeyDigit" android:text="4" />
+                    <TextView style="@style/DialerKeyLetters" android:text="GHI" />
+                </LinearLayout>
+                <com.glaciersecurity.glaciermessenger.ui.util.Digit
+                    android:id="@+id/Digit4"
+                    style="@style/DialerDigit"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:soundEffectsEnabled="true"
+                    android:text="4" />
+            </FrameLayout>
+
+            <FrameLayout style="@style/DialerKeyCell">
+                <LinearLayout style="@style/DialerKeyLabel">
+                    <TextView style="@style/DialerKeyDigit" android:text="5" />
+                    <TextView style="@style/DialerKeyLetters" android:text="JKL" />
+                </LinearLayout>
+                <com.glaciersecurity.glaciermessenger.ui.util.Digit
+                    android:id="@+id/Digit5"
+                    style="@style/DialerDigit"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:soundEffectsEnabled="true"
+                    android:text="5" />
+            </FrameLayout>
+
+            <FrameLayout style="@style/DialerKeyCell">
+                <LinearLayout style="@style/DialerKeyLabel">
+                    <TextView style="@style/DialerKeyDigit" android:text="6" />
+                    <TextView style="@style/DialerKeyLetters" android:text="MNO" />
+                </LinearLayout>
+                <com.glaciersecurity.glaciermessenger.ui.util.Digit
+                    android:id="@+id/Digit6"
+                    style="@style/DialerDigit"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:soundEffectsEnabled="true"
+                    android:text="6" />
+            </FrameLayout>
+        </LinearLayout>
+
+        <!-- Row 3 -->
+        <LinearLayout
+            android:id="@+id/row3"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:weightSum="3">
+
+            <FrameLayout style="@style/DialerKeyCell">
+                <LinearLayout style="@style/DialerKeyLabel">
+                    <TextView style="@style/DialerKeyDigit" android:text="7" />
+                    <TextView style="@style/DialerKeyLetters" android:text="PQRS" />
+                </LinearLayout>
+                <com.glaciersecurity.glaciermessenger.ui.util.Digit
+                    android:id="@+id/Digit7"
+                    style="@style/DialerDigit"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:soundEffectsEnabled="true"
+                    android:text="7" />
+            </FrameLayout>
+
+            <FrameLayout style="@style/DialerKeyCell">
+                <LinearLayout style="@style/DialerKeyLabel">
+                    <TextView style="@style/DialerKeyDigit" android:text="8" />
+                    <TextView style="@style/DialerKeyLetters" android:text="TUV" />
+                </LinearLayout>
+                <com.glaciersecurity.glaciermessenger.ui.util.Digit
+                    android:id="@+id/Digit8"
+                    style="@style/DialerDigit"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:soundEffectsEnabled="true"
+                    android:text="8" />
+            </FrameLayout>
+
+            <FrameLayout style="@style/DialerKeyCell">
+                <LinearLayout style="@style/DialerKeyLabel">
+                    <TextView style="@style/DialerKeyDigit" android:text="9" />
+                    <TextView style="@style/DialerKeyLetters" android:text="WXYZ" />
+                </LinearLayout>
+                <com.glaciersecurity.glaciermessenger.ui.util.Digit
+                    android:id="@+id/Digit9"
+                    style="@style/DialerDigit"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:soundEffectsEnabled="true"
+                    android:text="9" />
+            </FrameLayout>
+        </LinearLayout>
+
+        <!-- Row 4 -->
+        <LinearLayout
+            android:id="@+id/row4"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:weightSum="3">
+
+            <FrameLayout style="@style/DialerKeyCell">
+                <LinearLayout style="@style/DialerKeyLabel">
+                    <TextView style="@style/DialerKeyDigit" android:text="*" />
+                    <TextView style="@style/DialerKeyLetters" android:text="" />
+                </LinearLayout>
+                <com.glaciersecurity.glaciermessenger.ui.util.Digit
+                    android:id="@+id/DigitStar"
+                    style="@style/DialerDigit"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:soundEffectsEnabled="true"
+                    android:text="*" />
+            </FrameLayout>
+
+            <FrameLayout style="@style/DialerKeyCell">
+                <LinearLayout style="@style/DialerKeyLabel">
+                    <TextView style="@style/DialerKeyDigit" android:text="0" />
+                    <TextView style="@style/DialerKeyLetters" android:text="+" />
+                </LinearLayout>
+                <com.glaciersecurity.glaciermessenger.ui.util.Digit
+                    android:id="@+id/Digit00"
+                    style="@style/DialerDigit"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:soundEffectsEnabled="true"
+                    android:text="0+" />
+            </FrameLayout>
+
+            <FrameLayout style="@style/DialerKeyCell">
+                <LinearLayout style="@style/DialerKeyLabel">
+                    <TextView style="@style/DialerKeyDigit" android:text="#" />
+                    <TextView style="@style/DialerKeyLetters" android:text="" />
+                </LinearLayout>
+                <com.glaciersecurity.glaciermessenger.ui.util.Digit
+                    android:id="@+id/DigitHash"
+                    style="@style/DialerDigit"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:soundEffectsEnabled="true"
+                    android:text="#" />
+            </FrameLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</layout>

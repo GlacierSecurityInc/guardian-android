@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <!-- App-owned external media (getExternalFilesDir): where conversation
+         media is now stored. Required so the FileProvider can hand out
+         content:// URIs for open-with / share / view. -->
+    <external-files-path
+        name="external_files_pictures"
+        path="Pictures/"/>
+    <external-files-path
+        name="external_files_movies"
+        path="Movies/"/>
+    <external-files-path
+        name="external_files_documents"
+        path="Documents/"/>
+    <external-files-path
+        name="external_files_recordings"
+        path="Recordings/"/>
+    <external-files-path
+        name="external_files_download"
+        path="Download/"/>
+    <files-path
+        name="pictures"
+        path="Images/"/>
+    <files-path
+        name="videos"
+        path="Videos"/>
+    <files-path
+        name="files"
+        path="Files/"/>
+    <files-path
+        name="recordings"
+        path="Recordings/"/>
+    <!-- App-owned internal media: the fallback used by
+         FileBackend.getConversationsMediaDirectory() when getExternalFilesDir()
+         returns null stores media under filesDir/<type>/<appName> using the
+         Environment.DIRECTORY_* names (Pictures/Movies/Documents/Download,
+         Recordings is covered above). Required so the FileProvider can hand out
+         content:// URIs for open-with / share / view of this fallback media. -->
+    <files-path
+        name="files_pictures"
+        path="Pictures/"/>
+    <files-path
+        name="files_movies"
+        path="Movies/"/>
+    <files-path
+        name="files_documents"
+        path="Documents/"/>
+    <files-path
+        name="files_download"
+        path="Download/"/>
+    <cache-path
+        name="camera"
+        path="Camera/"/>
+</paths>

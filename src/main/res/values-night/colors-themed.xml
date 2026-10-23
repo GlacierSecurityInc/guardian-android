@@ -1,0 +1,27 @@
+<resources>
+    <!-- Dark mode override: login icons are white on the dark background -->
+    <color name="login_icon_tint">#FFFFFF</color>
+    <!-- Dark mode override: input fields are a dark grey raised above the near-black background -->
+    <color name="login_field_fill">#1D1E23</color>
+
+    <!-- Restore / Import-backup redesign tokens (dark theme).
+         Mirrors the Guardian 2026 "Restore.html" design system. -->
+    <color name="restore_bg">#0D0E12</color>
+    <color name="restore_surface">#15171D</color>
+    <color name="restore_text">#E8EAEF</color>
+    <color name="restore_muted">#9EE8EAEF</color>
+    <color name="restore_dim">#6BE8EAEF</color>
+    <color name="restore_border">#12FFFFFF</color>
+    <color name="restore_border_strong">#1FFFFFFF</color>
+    <color name="restore_accent">#7BA3FF</color>
+    <color name="restore_accent_solid">#4C7CF3</color>
+    <color name="restore_accent_ink">#0D0E12</color>
+    <color name="restore_accent_soft">#247BA3FF</color>
+    <!-- Faint accent halo behind the MFA verification badge (design: rgba(30,64,175,0.10)). -->
+    <color name="mfa_badge_glow">#1A1E40AF</color>
+    <color name="restore_caution_bg">#1FAA6E60</color>
+    <color name="restore_caution_border">#47AA6E60</color>
+    <color name="restore_caution_icon">#D39A8C</color>
+    <!-- Reset-password / MFA sheet surface: raised dark card above the sheet's scrim. -->
+    <color name="restore_sheet_bg">#121319</color>
+</resources>

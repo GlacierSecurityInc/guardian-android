@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Base (unmet) state for a password-strength meter segment; color is swapped at
+     runtime via GradientDrawable#setColor as requirements are met. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/restore_border_strong" />
+    <corners android:radius="2dp" />
+</shape>

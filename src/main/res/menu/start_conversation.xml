@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_search"
+        android:icon="@drawable/ic_search_24dp"
+        android:title="@string/search"
+        app:actionLayout="@layout/actionview_search"
+        app:showAsAction="collapseActionView|always" />
+<!--    <item-->
+<!--        android:id="@+id/action_scan_qr_code"-->
+<!--        android:icon="@drawable/ic_qr_code_scanner_24dp"-->
+<!--        android:title="@string/scan_qr_code"-->
+<!--        app:showAsAction="always" />-->
+
+    <!-- Group 1: filter toggles -->
+    <group
+        android:id="@+id/overflow_group_filter"
+        android:orderInCategory="85">
+        <item
+            android:id="@+id/action_hide_offline"
+            android:icon="@drawable/ic_visibility_off"
+            android:orderInCategory="85"
+            android:title="@string/hide_offline"
+            app:showAsAction="never" />
+    </group>
+
+    <!-- Group 2: account management -->
+    <group
+        android:id="@+id/overflow_group_accounts"
+        android:orderInCategory="90">
+        <item
+            android:id="@+id/action_accounts"
+            android:icon="@drawable/ic_account_box_20dp"
+            android:orderInCategory="90"
+            android:title="@string/action_accounts"
+            android:visible="false"
+            app:showAsAction="never" />
+        <item
+            android:id="@+id/action_account"
+            android:icon="@drawable/ic_person_24dp"
+            android:orderInCategory="91"
+            android:title="@string/action_account"
+            android:visible="false"
+            app:showAsAction="never" />
+    </group>
+
+    <!-- Group 3: app settings -->
+    <group
+        android:id="@+id/overflow_group_settings"
+        android:orderInCategory="98">
+        <item
+            android:id="@+id/action_privacy_policy"
+            android:icon="@drawable/ic_privacy_tip_24dp"
+            android:orderInCategory="98"
+            android:title="@string/privacy_policy"
+            android:visible="false"
+            app:showAsAction="never" />
+        <item
+            android:id="@+id/action_settings"
+            android:icon="@drawable/ic_settings_24dp"
+            android:orderInCategory="100"
+            android:title="@string/action_settings"
+            android:visible="false"
+            app:showAsAction="never" />
+    </group>
+
+</menu>

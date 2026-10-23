@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Pulsing avatar ring for incoming/outgoing call states. Tinted per-contact at runtime. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <solid android:color="@android:color/transparent" />
+    <stroke
+        android:width="@dimen/call_avatar_ring_stroke"
+        android:color="@android:color/white" />
+</shape>

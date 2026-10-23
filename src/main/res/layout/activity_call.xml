@@ -1,0 +1,219 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        android:orientation="vertical">
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/toolbar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <com.google.android.material.appbar.MaterialToolbar style="@style/BlackToolbar"
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="?attr/actionBarSize" />
+    </com.google.android.material.appbar.AppBarLayout>
+
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+    <LinearLayout
+    android:id="@+id/call_ui_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="24dp">
+
+        <TextView
+            android:id="@+id/participant_selected_identity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="6dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+             />
+
+        <TextView
+            android:id="@+id/particiant_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:textSize="20sp"
+            />
+    <TextView
+        android:id="@+id/call_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/call_in_progress"
+        android:textSize="20sp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"/>
+
+    <TextView
+        android:id="@+id/call_timer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="00:00"
+        android:textColor="@android:color/white"
+        android:textSize="24sp"
+        android:layout_marginBottom="24dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true"
+        android:paddingBottom="?attr/actionBarSize"
+        >
+
+        <LinearLayout
+            android:id="@+id/controls_grid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginStart="@dimen/spacing_slarge"
+            android:layout_marginEnd="@dimen/spacing_slarge"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/speaker"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical|center_horizontal"
+                android:orientation="vertical"
+
+                >
+
+                <androidx.appcompat.widget.AppCompatImageButton
+                    android:id="@+id/speaker_button"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/roundbutton_gray"
+                    android:visibility="visible"
+                    app:srcCompat="@drawable/ic_volume_white" />
+
+                <TextView
+                    android:id="@+id/speaker_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/speaker"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                    app:fontFamily="@font/neue_haas_grotesk"
+                    android:textStyle="bold" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/hold"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical|center_horizontal"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.AppCompatImageButton
+                    android:id="@+id/hold_image_button"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/roundbutton_gray"
+                    app:srcCompat="@drawable/ic_pause_white_24dp" />
+                <TextView
+                    android:id="@+id/hold_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/hold"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                    app:fontFamily="@font/neue_haas_grotesk"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/audio"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical|center_horizontal"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.AppCompatImageButton
+                    android:id="@+id/mute_button"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/roundbutton_gray"
+                    app:srcCompat="@drawable/ic_mic_white_24px" />
+                <TextView
+                    android:id="@+id/mute_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/mute"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                    app:fontFamily="@font/neue_haas_grotesk"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/key_pad"
+
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical|center_horizontal"
+
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.AppCompatImageButton
+                    android:id="@+id/key_pad_button"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_margin="8dp"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:background="@drawable/roundbutton_gray"
+                    android:visibility="visible"
+                    app:srcCompat="@drawable/baseline_dialpad_24" />
+
+
+                <TextView
+                    android:id="@+id/key_pad_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/key_pad_button"
+                    android:layout_centerHorizontal="true"
+                    android:text="@string/keypad"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                    app:fontFamily="@font/neue_haas_grotesk"
+                    android:textStyle="bold" />
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/end_call_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/fab_margin"
+            android:layout_gravity="center"
+
+            android:background="@drawable/roundbutton"
+            app:backgroundTint="@color/lobbyHangup"
+            app:srcCompat="@drawable/ic_call_end_white_24px"
+            />
+    </LinearLayout>
+
+</RelativeLayout>
+    </LinearLayout>
+
+</layout>

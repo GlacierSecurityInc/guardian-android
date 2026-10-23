@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_add_account"
+        android:icon="@drawable/ic_person_add_24dp"
+        android:title="@string/action_add_account"
+        app:showAsAction="ifRoom" />
+
+    <!-- Group 1: account management -->
+    <group android:id="@+id/overflow_group_accounts">
+        <item
+            android:id="@+id/action_import_backup"
+            android:icon="@drawable/restore_page_24px"
+            android:title="@string/restore_backup"
+            app:showAsAction="never" />
+        <item
+            android:id="@+id/action_add_account_with_cert"
+            android:icon="@drawable/ic_verified_user_24dp"
+            android:title="@string/action_add_account_with_certificate"
+            android:visible="true"
+            app:showAsAction="never" />
+        <item
+            android:id="@+id/action_enable_all"
+            android:title="@string/enable_all_accounts" />
+        <item
+            android:id="@+id/action_disable_all"
+            android:title="@string/disable_all_accounts" />
+    </group>
+
+    <!-- Group 2: app settings -->
+    <group android:id="@+id/overflow_group_settings">
+        <item
+            android:id="@+id/action_settings"
+            android:icon="@drawable/ic_settings_24dp"
+            android:orderInCategory="100"
+            android:title="@string/action_settings"
+            app:showAsAction="never" />
+    </group>
+
+</menu>

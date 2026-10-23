@@ -1,0 +1,26 @@
+# Secret scanning before a commit leaves your machine. CI runs the same two tools over the
+# full history (.github/workflows/secret-scan.yml); this catches a secret before it is
+# ever in a commit, when removing it is still just an edit.
+#
+# One-time setup:
+#   pip install pre-commit
+#   pre-commit install
+#
+# The TruffleHog hook runs your locally installed `trufflehog` binary
+# (brew install trufflehog, or a release from github.com/trufflesecurity/trufflehog).
+#
+# Keep the Gitleaks rev in step with the version in secret-scan.yml.
+
+repos:
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.30.1
+    hooks:
+      - id: gitleaks
+
+  - repo: local
+    hooks:
+      - id: trufflehog
+        name: TruffleHog
+        description: Fail on live or unverifiable credentials in the files being committed.
+        entry: trufflehog filesystem --results=verified,unknown --fail --no-update
+        language: system

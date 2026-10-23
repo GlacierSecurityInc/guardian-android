@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Direction B filter chip fill: glacier accent when selected, neutral surface otherwise -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:color="@color/glacier_button" android:state_checked="true" />
+    <item android:color="?attr/colorSurfaceContainerHigh" />
+</selector>

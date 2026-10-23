@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Splash screen icon wrapper. ic_glacier_brand's artwork fills its viewBox
+  edge-to-edge with no built-in margin, but the Android 12+ splash screen
+  expects headroom around the icon (like the adaptive-icon safe zone) —
+  without it, the edges get clipped. This inset creates that margin.
+-->
+<inset xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/ic_glacier_brand_splash"
+    android:insetLeft="25%"
+    android:insetTop="25%"
+    android:insetRight="25%"
+    android:insetBottom="25%" />

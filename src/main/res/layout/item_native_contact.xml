@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_selectable_list_item"
+        android:gravity="center_vertical"
+        android:paddingStart="20dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp">
+
+        <!-- Tone-palette squircle avatar -->
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/contact_photo"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/baseline_person_24"
+            app:riv_corner_radius="14dp" />
+
+        <!-- Per-row quick actions: message + call -->
+        <LinearLayout
+            android:id="@+id/quick_actions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/action_message"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:background="@drawable/bg_quick_action_outline"
+                android:contentDescription="@string/message"
+                android:padding="10dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/baseline_sms_24"
+                app:tint="?attr/colorPrimary" />
+
+            <ImageView
+                android:id="@+id/action_call"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/bg_quick_action_filled"
+                android:contentDescription="@string/call"
+                android:padding="10dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/baseline_local_phone_24"
+                app:tint="?attr/colorPrimary" />
+        </LinearLayout>
+
+        <!-- Name + secondary line -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="14dp"
+            android:layout_marginEnd="12dp"
+            android:layout_toStartOf="@id/quick_actions"
+            android:layout_toEndOf="@id/contact_photo"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/contact_display_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:fontFamily="@font/neue_haas_grotesk"
+                android:singleLine="true"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="15.5sp"
+                tools:text="Alex Whitaker"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/secure_shield"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:layout_marginEnd="5dp"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_cc_shield_check"
+                    android:visibility="gone"
+                    app:tint="?attr/colorPrimary" />
+
+                <TextView
+                    android:id="@+id/contact_phone_number"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:textSize="12.5sp"
+                    tools:text="+1 (415) 555-0117" />
+            </LinearLayout>
+
+            <!-- Dynamic tags (kept for SHOW_DYNAMIC_TAGS preference) -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/tags"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:visibility="gone">
+
+                <androidx.constraintlayout.helper.widget.Flow
+                    android:id="@+id/flow_widget"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:flow_horizontalBias="0"
+                    app:flow_horizontalGap="8sp"
+                    app:flow_horizontalStyle="packed"
+                    app:flow_verticalGap="4sp"
+                    app:flow_wrapMode="chain"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <TextView
+                android:id="@+id/key"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="monospace"
+                android:textAppearance="?textAppearanceBodyMedium"
+                android:visibility="gone" />
+        </LinearLayout>
+
+    </RelativeLayout>
+</layout>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/spacing_medium">
+
+
+
+        <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/sms_textfield"
+                    app:layout_constraintRight_toLeftOf="@id/delete_nickname_btn"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:layout_marginRight="40dp"
+                    android:layout_toLeftOf="@+id/delete_nickname_btn"
+                    android:layout_centerVertical="true">
+
+                    <EditText
+                        android:id="@+id/sms_nickname"
+                        style="@style/Widget.AppCompat.EditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:ems="10"
+                        android:hint="@string/sms_nickname"
+                        android:imeOptions="actionDone"
+                        android:inputType="textShortMessage|textNoSuggestions" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+        <ImageButton
+            android:id="@+id/delete_nickname_btn"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_alignRight="@+id/sms_textfield"
+            android:layout_alignParentRight="false"
+            android:layout_centerVertical="true"
+            android:clickable="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_delete_24dp" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+</layout>

@@ -1,0 +1,516 @@
+/*
+ *  Copyright 2014 The WebRTC Project Authors. All rights reserved.
+ *
+ *  Use of this source code is governed by a BSD-style license
+ *  that can be found in the LICENSE file in the root of the source
+ *  tree. An additional intellectual property rights grant can be found
+ *  in the file PATENTS.  All contributing project authors may
+ *  be found in the AUTHORS file in the root of the source tree.
+ */
+package com.glaciersecurity.glaciermessenger.services;
+
+import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.media.AudioAttributes;
+import android.media.AudioDeviceInfo;
+import android.media.AudioFocusRequest;
+import android.media.AudioManager;
+import android.media.ToneGenerator;
+import com.glaciersecurity.glaciermessenger.utils.Log;
+
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+
+import com.google.common.collect.ImmutableSet;
+
+import com.glaciersecurity.glaciermessenger.Config;
+import com.glaciersecurity.glaciermessenger.utils.AppRTCUtils;
+
+import org.webrtc.ThreadUtils;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+/** AppRTCAudioManager manages all audio related parts of the AppRTC demo. */
+public class AppRTCAudioManager {
+
+    private final Context apprtcContext;
+    // Contains speakerphone setting: auto, true or false
+    // Handles all tasks related to Bluetooth headset devices.
+    private final AppRTCBluetoothManager bluetoothManager;
+    @Nullable private final AudioManager audioManager;
+    @Nullable private AudioManagerEvents audioManagerEvents;
+    private AudioManagerState amState;
+    private boolean savedIsSpeakerPhoneOn;
+    private boolean savedIsMicrophoneMute;
+    private boolean hasWiredHeadset;
+    // Default audio device; speaker phone for video calls or earpiece for audio
+    // only calls.
+    private CallIntegration.AudioDevice defaultAudioDevice;
+    // Contains the currently selected audio device.
+    // This device is changed automatically using a certain scheme where e.g.
+    // a wired headset "wins" over speaker phone. It is also possible for a
+    // user to explicitly select a device (and overrid any predefined scheme).
+    // See |userSelectedAudioDevice| for details.
+    private CallIntegration.AudioDevice selectedAudioDevice;
+    // Contains the user-selected audio device which overrides the predefined
+    // selection scheme.
+    private CallIntegration.AudioDevice userSelectedAudioDevice;
+
+    // Contains a list of available audio devices. A Set collection is used to
+    // avoid duplicate elements.
+    private Set<CallIntegration.AudioDevice> audioDevices = new HashSet<>();
+    // Broadcast receiver for wired headset intent broadcasts.
+    private final BroadcastReceiver wiredHeadsetReceiver;
+    // Callback method for changes in audio focus.
+    @Nullable private AudioManager.OnAudioFocusChangeListener audioFocusChangeListener;
+    @Nullable private AudioFocusRequest audioFocusRequest;
+    @Nullable private ToneGenerator ringBackToneGenerator;
+
+    public AppRTCAudioManager(final Context context) {
+        apprtcContext = context;
+        audioManager = ((AudioManager) context.getSystemService(Context.AUDIO_SERVICE));
+        bluetoothManager = AppRTCBluetoothManager.create(context, this);
+        wiredHeadsetReceiver = new WiredHeadsetReceiver();
+        amState = AudioManagerState.UNINITIALIZED;
+        // CallIntegration / Connection uses Earpiece as default too
+        if (hasEarpiece()) {
+            defaultAudioDevice = CallIntegration.AudioDevice.EARPIECE;
+        } else {
+            defaultAudioDevice = CallIntegration.AudioDevice.SPEAKER_PHONE;
+        }
+        AppRTCUtils.logDeviceInfo(Config.LOGTAG);
+    }
+
+    public void setAudioManagerEvents(final AudioManagerEvents audioManagerEvents) {
+        this.audioManagerEvents = audioManagerEvents;
+    }
+
+    public void start() {
+        ThreadUtils.checkIsOnMainThread();
+        if (amState == AudioManagerState.RUNNING) {
+            Log.e(Config.LOGTAG, "AudioManager is already active");
+            return;
+        }
+        amState = AudioManagerState.RUNNING;
+        // Store current audio state so we can restore it when stop() is called.
+        savedIsSpeakerPhoneOn = audioManager.isSpeakerphoneOn();
+        savedIsMicrophoneMute = audioManager.isMicrophoneMute();
+        hasWiredHeadset = hasWiredHeadset();
+        // Create an AudioManager.OnAudioFocusChangeListener instance.
+        audioFocusChangeListener =
+                new AudioManager.OnAudioFocusChangeListener() {
+                    // Called on the listener to notify if the audio focus for this listener has
+                    // been changed.
+                    // The |focusChange| value indicates whether the focus was gained, whether the
+                    // focus was lost,
+                    // and whether that loss is transient, or whether the new focus holder will hold
+                    // it for an
+                    // unknown amount of time.
+                    @Override
+                    public void onAudioFocusChange(final int focusChange) {
+                        final String typeOfChange =
+                                switch (focusChange) {
+                                    case AudioManager.AUDIOFOCUS_GAIN -> "AUDIOFOCUS_GAIN";
+                                    case AudioManager
+                                            .AUDIOFOCUS_GAIN_TRANSIENT -> "AUDIOFOCUS_GAIN_TRANSIENT";
+                                    case AudioManager
+                                            .AUDIOFOCUS_GAIN_TRANSIENT_EXCLUSIVE -> "AUDIOFOCUS_GAIN_TRANSIENT_EXCLUSIVE";
+                                    case AudioManager
+                                            .AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK -> "AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK";
+                                    case AudioManager.AUDIOFOCUS_LOSS -> "AUDIOFOCUS_LOSS";
+                                    case AudioManager
+                                            .AUDIOFOCUS_LOSS_TRANSIENT -> "AUDIOFOCUS_LOSS_TRANSIENT";
+                                    case AudioManager
+                                            .AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> "AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK";
+                                    default -> "AUDIOFOCUS_INVALID";
+                                };
+                    }
+                };
+        // Request audio playout focus (without ducking) and install listener for changes in focus.
+        final AudioAttributes audioAttributes =
+                new AudioAttributes.Builder()
+                        .setUsage(AudioAttributes.USAGE_VOICE_COMMUNICATION)
+                        .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
+                        .build();
+        audioFocusRequest =
+                new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT)
+                        .setAudioAttributes(audioAttributes)
+                        .setOnAudioFocusChangeListener(audioFocusChangeListener)
+                        .build();
+        int result = audioManager.requestAudioFocus(audioFocusRequest);
+        if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+        } else {
+            Log.e(Config.LOGTAG, "Audio focus request failed");
+        }
+        // Start by setting MODE_IN_COMMUNICATION as default audio mode. It is
+        // required to be in this mode when playout and/or recording starts for
+        // best possible VoIP performance.
+        audioManager.setMode(AudioManager.MODE_IN_COMMUNICATION);
+        // Always disable microphone mute during a WebRTC call.
+        setMicrophoneMute(false);
+        // Set initial device states.
+        userSelectedAudioDevice = CallIntegration.AudioDevice.NONE;
+        selectedAudioDevice = CallIntegration.AudioDevice.NONE;
+        audioDevices.clear();
+        // Initialize and start Bluetooth if a BT device is available or initiate
+        // detection of new (enabled) BT devices.
+        bluetoothManager.start();
+        // Do initial selection of audio device. This setting can later be changed
+        // either by adding/removing a BT or wired headset or by covering/uncovering
+        // the proximity sensor.
+        updateAudioDeviceState();
+        // Register receiver for broadcast intents related to adding/removing a
+        // wired headset.
+        registerReceiver(wiredHeadsetReceiver, new IntentFilter(Intent.ACTION_HEADSET_PLUG));
+    }
+
+    public void stop() {
+        ThreadUtils.checkIsOnMainThread();
+        if (amState != AudioManagerState.RUNNING) {
+            Log.e(Config.LOGTAG, "Trying to stop AudioManager in incorrect state: " + amState);
+            return;
+        }
+        amState = AudioManagerState.UNINITIALIZED;
+        unregisterReceiver(wiredHeadsetReceiver);
+        bluetoothManager.stop();
+        // Restore previously stored audio states.
+        setSpeakerphoneOn(savedIsSpeakerPhoneOn);
+        setMicrophoneMute(savedIsMicrophoneMute);
+        audioManager.setMode(AudioManager.MODE_NORMAL);
+        // Abandon audio focus. Gives the previous focus owner, if any, focus.
+        if (audioFocusRequest != null) {
+            audioManager.abandonAudioFocusRequest(audioFocusRequest);
+            audioFocusRequest = null;
+        }
+        audioFocusChangeListener = null;
+        audioManagerEvents = null;
+    }
+
+    /** Changes selection of the currently active audio device. */
+    private void setAudioDeviceInternal(final CallIntegration.AudioDevice device) {
+        AppRTCUtils.assertIsTrue(audioDevices.contains(device));
+        switch (device) {
+            case SPEAKER_PHONE -> setSpeakerphoneOn(true);
+            case EARPIECE, WIRED_HEADSET, BLUETOOTH -> setSpeakerphoneOn(false);
+            default -> Log.e(Config.LOGTAG, "Invalid audio device selection");
+        }
+        selectedAudioDevice = device;
+    }
+
+    /**
+     * Changes default audio device.
+     */
+    public void setDefaultAudioDevice(final CallIntegration.AudioDevice defaultDevice) {
+        ThreadUtils.checkIsOnMainThread();
+        switch (defaultDevice) {
+            case SPEAKER_PHONE -> defaultAudioDevice = defaultDevice;
+            case EARPIECE -> {
+                if (hasEarpiece()) {
+                    defaultAudioDevice = defaultDevice;
+                } else {
+                    defaultAudioDevice = CallIntegration.AudioDevice.SPEAKER_PHONE;
+                }
+            }
+            default -> Log.e(Config.LOGTAG, "Invalid default audio device selection");
+        }
+        updateAudioDeviceState();
+    }
+
+    /** Changes selection of the currently active audio device. */
+    public void selectAudioDevice(final CallIntegration.AudioDevice device) {
+        ThreadUtils.checkIsOnMainThread();
+        if (!audioDevices.contains(device)) {
+            Log.e(Config.LOGTAG, "Can not select " + device + " from available " + audioDevices);
+        }
+        userSelectedAudioDevice = device;
+        updateAudioDeviceState();
+    }
+
+    /**
+     * A choice made in the call UI. Unlike setDefaultAudioDevice() it also wins over a connected
+     * headset, and it sticks: a headset whose SCO link drops and returns is not re-selected.
+     */
+    public void selectAudioDeviceByUser(final CallIntegration.AudioDevice device) {
+        ThreadUtils.checkIsOnMainThread();
+        if (device == CallIntegration.AudioDevice.SPEAKER_PHONE
+                || device == CallIntegration.AudioDevice.EARPIECE) {
+            defaultAudioDevice = hasEarpiece() ? device : CallIntegration.AudioDevice.SPEAKER_PHONE;
+        } else if (device == CallIntegration.AudioDevice.BLUETOOTH) {
+            // an explicit request deserves a fresh try even if earlier attempts gave up
+            bluetoothManager.scoConnectionAttempts = 0;
+        }
+        selectAudioDevice(device);
+    }
+
+    public List<BluetoothDevice> getBluetoothDevices() {
+        return bluetoothManager.getConnectedDevices();
+    }
+
+    /** The headset call audio goes to; the only one this path can route to. */
+    @Nullable
+    public BluetoothDevice getBluetoothDevice() {
+        return bluetoothManager.getDevice();
+    }
+
+    /** Returns current set of available/selectable audio devices. */
+    public Set<CallIntegration.AudioDevice> getAudioDevices() {
+        return ImmutableSet.copyOf(audioDevices);
+    }
+
+    /** Returns the currently selected audio device. */
+    public CallIntegration.AudioDevice getSelectedAudioDevice() {
+        return selectedAudioDevice;
+    }
+
+    /** Helper method for receiver registration. */
+    private void registerReceiver(BroadcastReceiver receiver, IntentFilter filter) {
+        ContextCompat.registerReceiver(apprtcContext, receiver, filter, ContextCompat.RECEIVER_NOT_EXPORTED);
+    }
+
+    /** Helper method for unregistration of an existing receiver. */
+    private void unregisterReceiver(BroadcastReceiver receiver) {
+        apprtcContext.unregisterReceiver(receiver);
+    }
+
+    /** Sets the speaker phone mode. */
+    private void setSpeakerphoneOn(boolean on) {
+        boolean wasOn = audioManager.isSpeakerphoneOn();
+        if (wasOn == on) {
+            return;
+        }
+        audioManager.setSpeakerphoneOn(on);
+    }
+
+    /** Sets the microphone mute state. */
+    private void setMicrophoneMute(boolean on) {
+        boolean wasMuted = audioManager.isMicrophoneMute();
+        if (wasMuted == on) {
+            return;
+        }
+        audioManager.setMicrophoneMute(on);
+    }
+
+    /** Gets the current earpiece state. */
+    private boolean hasEarpiece() {
+        return apprtcContext.getPackageManager().hasSystemFeature(PackageManager.FEATURE_TELEPHONY);
+    }
+
+    /**
+     * Checks whether a wired headset is connected or not. This is not a valid indication that audio
+     * playback is actually over the wired headset as audio routing depends on other conditions. We
+     * only use it as an early indicator (during initialization) of an attached wired headset.
+     */
+    @Deprecated
+    private boolean hasWiredHeadset() {
+        final AudioDeviceInfo[] devices =
+                audioManager.getDevices(
+                        AudioManager.GET_DEVICES_OUTPUTS | AudioManager.GET_DEVICES_INPUTS);
+        for (AudioDeviceInfo device : devices) {
+            final int type = device.getType();
+            if (type == AudioDeviceInfo.TYPE_WIRED_HEADSET) {
+                return true;
+            } else if (type == AudioDeviceInfo.TYPE_USB_DEVICE) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Updates list of possible audio devices and make new device selection.
+     */
+    public void updateAudioDeviceState() {
+        ThreadUtils.checkIsOnMainThread();
+        // Check if any Bluetooth headset is connected. The internal BT state will
+        // change accordingly.
+        if (bluetoothManager.getState() == AppRTCBluetoothManager.State.HEADSET_AVAILABLE
+                || bluetoothManager.getState() == AppRTCBluetoothManager.State.HEADSET_UNAVAILABLE
+                || bluetoothManager.getState() == AppRTCBluetoothManager.State.SCO_DISCONNECTING) {
+            bluetoothManager.updateDevice();
+        }
+        // Update the set of available audio devices.
+        Set<CallIntegration.AudioDevice> newAudioDevices = new HashSet<>();
+        if (bluetoothManager.getState() == AppRTCBluetoothManager.State.SCO_CONNECTED
+                || bluetoothManager.getState() == AppRTCBluetoothManager.State.SCO_CONNECTING
+                || bluetoothManager.getState() == AppRTCBluetoothManager.State.HEADSET_AVAILABLE) {
+            newAudioDevices.add(CallIntegration.AudioDevice.BLUETOOTH);
+        }
+        if (hasWiredHeadset) {
+            // If a wired headset is connected, then it is the only possible option.
+            newAudioDevices.add(CallIntegration.AudioDevice.WIRED_HEADSET);
+        } else {
+            // No wired headset, hence the audio-device list can contain speaker
+            // phone (on a tablet), or speaker phone and earpiece (on mobile phone).
+            newAudioDevices.add(CallIntegration.AudioDevice.SPEAKER_PHONE);
+            if (hasEarpiece()) {
+                newAudioDevices.add(CallIntegration.AudioDevice.EARPIECE);
+            }
+        }
+        // Store state which is set to true if the device list has changed.
+        boolean audioDeviceSetUpdated = !audioDevices.equals(newAudioDevices);
+        // Update the existing audio device set.
+        audioDevices = newAudioDevices;
+        // Correct user selected audio devices if needed.
+        if (bluetoothManager.getState() == AppRTCBluetoothManager.State.HEADSET_UNAVAILABLE
+                && userSelectedAudioDevice == CallIntegration.AudioDevice.BLUETOOTH) {
+            // If BT is not available, it can't be the user selection.
+            userSelectedAudioDevice = CallIntegration.AudioDevice.NONE;
+        }
+        if (hasWiredHeadset
+                && userSelectedAudioDevice == CallIntegration.AudioDevice.SPEAKER_PHONE) {
+            // If user selected speaker phone, but then plugged wired headset then make
+            // wired headset as user selected device.
+            userSelectedAudioDevice = CallIntegration.AudioDevice.WIRED_HEADSET;
+        }
+        if (!hasWiredHeadset
+                && userSelectedAudioDevice == CallIntegration.AudioDevice.WIRED_HEADSET) {
+            // If user selected wired headset, but then unplugged wired headset then make
+            // speaker phone as user selected device.
+            userSelectedAudioDevice = CallIntegration.AudioDevice.SPEAKER_PHONE;
+        }
+        // Need to start Bluetooth if it is available and user either selected it explicitly or
+        // user did not select any output device.
+        boolean needBluetoothAudioStart =
+                bluetoothManager.getState() == AppRTCBluetoothManager.State.HEADSET_AVAILABLE
+                        && (userSelectedAudioDevice == CallIntegration.AudioDevice.NONE
+                                || userSelectedAudioDevice
+                                        == CallIntegration.AudioDevice.BLUETOOTH);
+        // Need to stop Bluetooth audio if user selected different device and
+        // Bluetooth SCO connection is established or in the process.
+        boolean needBluetoothAudioStop =
+                (bluetoothManager.getState() == AppRTCBluetoothManager.State.SCO_CONNECTED
+                                || bluetoothManager.getState()
+                                        == AppRTCBluetoothManager.State.SCO_CONNECTING)
+                        && (userSelectedAudioDevice != CallIntegration.AudioDevice.NONE
+                                && userSelectedAudioDevice
+                                        != CallIntegration.AudioDevice.BLUETOOTH);
+        if (bluetoothManager.getState() == AppRTCBluetoothManager.State.HEADSET_AVAILABLE
+                || bluetoothManager.getState() == AppRTCBluetoothManager.State.SCO_CONNECTING
+                || bluetoothManager.getState() == AppRTCBluetoothManager.State.SCO_CONNECTED) {
+        }
+        // Start or stop Bluetooth SCO connection given states set earlier.
+        if (needBluetoothAudioStop) {
+            bluetoothManager.stopScoAudio();
+            bluetoothManager.updateDevice();
+        }
+        if (needBluetoothAudioStart && !needBluetoothAudioStop) {
+            // Attempt to start Bluetooth SCO audio (takes a few second to start).
+            if (!bluetoothManager.startScoAudio()) {
+                // Remove BLUETOOTH from list of available devices since SCO failed.
+                audioDevices.remove(CallIntegration.AudioDevice.BLUETOOTH);
+                audioDeviceSetUpdated = true;
+            }
+        }
+        // Update selected audio device.
+        final CallIntegration.AudioDevice newAudioDevice;
+        if (bluetoothManager.getState() == AppRTCBluetoothManager.State.SCO_CONNECTED) {
+            // If a Bluetooth is connected, then it should be used as output audio
+            // device. Note that it is not sufficient that a headset is available;
+            // an active SCO channel must also be up and running.
+            newAudioDevice = CallIntegration.AudioDevice.BLUETOOTH;
+        } else if (hasWiredHeadset) {
+            // If a wired headset is connected, but Bluetooth is not, then wired headset is used as
+            // audio device.
+            newAudioDevice = CallIntegration.AudioDevice.WIRED_HEADSET;
+        } else {
+            // No wired headset and no Bluetooth, hence the audio-device list can contain speaker
+            // phone (on a tablet), or speaker phone and earpiece (on mobile phone).
+            // |defaultAudioDevice| contains either AudioDevice.SPEAKER_PHONE or
+            // AudioDevice.EARPIECE
+            // depending on the user's selection.
+            newAudioDevice = defaultAudioDevice;
+        }
+        // Switch to new device but only if there has been any changes.
+        if (newAudioDevice != selectedAudioDevice || audioDeviceSetUpdated) {
+            // Do the required device switch.
+            setAudioDeviceInternal(newAudioDevice);
+            if (audioManagerEvents != null) {
+                // Notify a listening client that audio device has been changed.
+                audioManagerEvents.onAudioDeviceChanged(selectedAudioDevice, audioDevices);
+            }
+        }
+    }
+
+    public void executeOnMain(final Runnable runnable) {
+        ContextCompat.getMainExecutor(apprtcContext).execute(runnable);
+    }
+
+    public void startRingBack() {
+        // Play a single, self-cadencing supervisory ringback tone (TONE_SUP_RINGTONE repeats
+        // its ring/pause pattern indefinitely until stopTone()), so the caller hears a
+        // phone-like "ring ... ring ..." for the whole dialing phase.
+        //
+        // The previous implementation re-created a ToneGenerator on a fixed 3s schedule and
+        // never released it, leaking a native AudioTrack on every tick. Once those ran out the
+        // constructor threw a RuntimeException from inside scheduleAtFixedRate, which
+        // permanently suppresses all further executions of the periodic task -- so the ringback
+        // played a couple of times and then went silent for the rest of the call.
+        stopRingBack();
+        final ToneGenerator toneGenerator;
+        try {
+            toneGenerator =
+                    new ToneGenerator(
+                            AudioManager.STREAM_VOICE_CALL, CallIntegration.DEFAULT_TONE_VOLUME);
+        } catch (final RuntimeException e) {
+            Log.e(Config.LOGTAG, "could not initialize ringback tone generator", e);
+            return;
+        }
+        this.ringBackToneGenerator = toneGenerator;
+        try {
+            toneGenerator.startTone(ToneGenerator.TONE_SUP_RINGTONE);
+        } catch (final RuntimeException e) {
+            Log.e(Config.LOGTAG, "could not play ringback tone", e);
+        }
+    }
+
+    public void stopRingBack() {
+        final var toneGenerator = this.ringBackToneGenerator;
+        if (toneGenerator != null) {
+            this.ringBackToneGenerator = null;
+            try {
+                toneGenerator.stopTone();
+            } catch (final RuntimeException e) {
+                Log.w(Config.LOGTAG, "could not stop ringback tone", e);
+            }
+            toneGenerator.release();
+        }
+    }
+
+    /** AudioManager state. */
+    public enum AudioManagerState {
+        UNINITIALIZED,
+        PREINITIALIZED,
+        RUNNING,
+    }
+
+    /** Selected audio device change event. */
+    public interface AudioManagerEvents {
+        // Callback fired once audio device is changed or list of available audio devices changed.
+        void onAudioDeviceChanged(
+                CallIntegration.AudioDevice selectedAudioDevice,
+                Set<CallIntegration.AudioDevice> availableAudioDevices);
+    }
+
+    /* Receiver which handles changes in wired headset availability. */
+    private class WiredHeadsetReceiver extends BroadcastReceiver {
+        private static final int STATE_UNPLUGGED = 0;
+        private static final int STATE_PLUGGED = 1;
+        private static final int HAS_NO_MIC = 0;
+        private static final int HAS_MIC = 1;
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            int state = intent.getIntExtra("state", STATE_UNPLUGGED);
+            int microphone = intent.getIntExtra("microphone", HAS_NO_MIC);
+            String name = intent.getStringExtra("name");
+            hasWiredHeadset = (state == STATE_PLUGGED);
+            updateAudioDeviceState();
+        }
+    }
+}

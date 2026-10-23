@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    Applies to release builds and to any debug build that has not overridden it.
+
+    NOTE: src/debug/res/xml/network_security_configuration.xml shadows this file for the debug
+    variant and carries a verbatim copy of the pin-sets below. Rotate a pin here and you must
+    rotate it there too — NetworkSecurityConfigParityTest fails the build if they drift.
+
+    The pin values below are PLACEHOLDERS and will not validate against any real host. Replace
+    them with the SPKI SHA-256 hashes of the CAs named beside them before shipping a build. To
+    generate a pin for a host:
+
+        openssl s_client -servername HOST -connect HOST:443 </dev/null \
+          | openssl x509 -pubkey -noout \
+          | openssl pkey -pubin -outform der \
+          | openssl dgst -sha256 -binary \
+          | openssl enc -base64
+-->
+<network-security-config>
+
+    <!-- Keep global defaults strict -->
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+
+    <!-- PROD API host -->
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="false">@string/glacier_api_host_prod</domain>
+        <pin-set expiration="2027-12-31">
+            <!-- Amazon Trust Services -->
+            <pin digest="SHA-256">AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</pin> <!-- Amazon M01 -->
+            <pin digest="SHA-256">BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB=</pin> <!-- Amazon M04 -->
+            <pin digest="SHA-256">CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC=</pin> <!-- Amazon Root CA 1 -->
+
+            <!-- Backup/alternate chain -->
+            <pin digest="SHA-256">DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD=</pin> <!-- GTS intermediate -->
+            <pin digest="SHA-256">EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE=</pin> <!-- GTS root -->
+        </pin-set>
+    </domain-config>
+
+    <!-- Optional: staging host -->
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="false">@string/glacier_api_host_staging</domain>
+        <pin-set expiration="2027-12-31">
+            <pin digest="SHA-256">AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</pin>
+            <pin digest="SHA-256">BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB=</pin>
+            <pin digest="SHA-256">CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC=</pin>
+            <pin digest="SHA-256">DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD=</pin>
+            <pin digest="SHA-256">EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE=</pin>
+        </pin-set>
+    </domain-config>
+
+    <!-- AWS Cognito. Pinned here rather than in GlacierCertificatePinner because Amplify
+         (Amplify.Auth.fetchAuthSession) uses its own HTTP stack, not the app's OkHttpClient, so an
+         OkHttp pin would never apply to it. The platform config binds at the TLS layer regardless
+         of which stack opens the socket. This mirrors NSPinnedDomains in the iOS app, which pins
+         these same two hosts for the same reason. Chains verified live 2026-09-22:
+         cognito-idp -> Amazon RSA 2048 M01 -> Amazon Root CA 1;
+         *.auth.us-east-1.amazoncognito.com -> Amazon RSA 2048 M04 -> Amazon Root CA 1. -->
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="false">cognito-idp.us-east-1.amazonaws.com</domain>
+        <pin-set expiration="2027-12-31">
+            <pin digest="SHA-256">AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</pin> <!-- Amazon M01 -->
+            <pin digest="SHA-256">BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB=</pin> <!-- Amazon M04 -->
+            <pin digest="SHA-256">CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC=</pin> <!-- Amazon Root CA 1 -->
+        </pin-set>
+    </domain-config>
+
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="false">glaciersec.auth.us-east-1.amazoncognito.com</domain>
+        <pin-set expiration="2027-12-31">
+            <pin digest="SHA-256">AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</pin> <!-- Amazon M01 -->
+            <pin digest="SHA-256">BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB=</pin> <!-- Amazon M04 -->
+            <pin digest="SHA-256">CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC=</pin> <!-- Amazon Root CA 1 -->
+        </pin-set>
+    </domain-config>
+
+</network-security-config>

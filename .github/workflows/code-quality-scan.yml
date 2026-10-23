@@ -1,0 +1,319 @@
+name: Code Quality Scan
+
+# Every automated check this branch has, on every push and pull request, on ALL branches --
+# so a problem is caught when it is committed rather than when someone targets a release
+# branch. Three jobs:
+#
+#   android-lint  Android Lint over the playstore flavour, using the lint {} config in build.gradle.
+#   unit-tests    The src/test JVM suite, with a JaCoCo coverage report, plus a compile
+#                 check of the src/androidTest
+#                 tier (which it does not run).
+#   app-build     Assembles the debug APK, which is the only thing here that dexes and
+#                 packages the app.
+#
+# All three need the same three repo secrets to get past dependency resolution /
+# processGoogleServices / compile:
+#   - MAPBOX_DOWNLOADS_TOKEN, GOOGLE_SERVICES_JSON, ENDPOINT_CONFIG_JAVA
+#
+# and all three are therefore skipped for a pull request from a fork or from Dependabot,
+# which GitHub does not give repository secrets to. A green result on such a PR means the
+# jobs did not run.
+#
+# This replaced android-build.yml on this branch. That workflow only ever triggered on
+# `sdk37` and `main`, so it could not fire for a pull request into 7.2 -- and a PR into
+# `main` is governed by `main`'s own copy of the file, not this branch's. `main` still
+# carries its own android-build.yml, which is its only CI; deleting it here does not touch
+# that. Anything merging this branch into `main` needs to keep it.
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: code-quality-scan-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  android-lint:
+    name: Code quality (Android Lint)
+    runs-on: ubuntu-latest
+    # Fork/Dependabot PRs don't receive repo secrets, so the build-secret
+    # steps below would leave the module unbuildable and fail lint every
+    # time. Only run this job where secrets are actually available.
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Clear Android SDK cache
+        run: |
+          rm -rf /usr/local/lib/android/sdk/cmdline-tools
+          rm -rf ~/android-sdk
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v4
+        with:
+          # The action's default package list is "tools platform-tools", but
+          # Google has removed the legacy "tools" package from the SDK
+          # repository: sdkmanager fails to find it, exits 1, and this job dies
+          # in setup before Gradle ever runs. Ask for platform-tools only -- AGP
+          # resolves the platform and build-tools it needs by itself.
+          packages: platform-tools
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v6
+
+      - name: Write google-services.json
+        env:
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+        run: |
+          if [ -n "$GOOGLE_SERVICES_JSON" ]; then
+            printf '%s' "$GOOGLE_SERVICES_JSON" > google-services.json
+            echo "Wrote google-services.json from secret."
+          else
+            echo "::warning::GOOGLE_SERVICES_JSON secret is not set; lint will fail at processGoogleServices."
+          fi
+
+      - name: Write EndPointConfig.java
+        env:
+          ENDPOINT_CONFIG_JAVA: ${{ secrets.ENDPOINT_CONFIG_JAVA }}
+        run: |
+          if [ -n "$ENDPOINT_CONFIG_JAVA" ]; then
+            printf '%s' "$ENDPOINT_CONFIG_JAVA" > src/main/java/com/glaciersecurity/glaciermessenger/EndPointConfig.java
+            echo "Wrote EndPointConfig.java from secret."
+          else
+            echo "::warning::ENDPOINT_CONFIG_JAVA secret is not set; lint will fail at compile time."
+          fi
+
+      # Flavour-qualified: `lintDebug` does not exist now that the distribution
+      # dimension prefixes the variant name.
+      - name: Run Android Lint
+        env:
+          ORG_GRADLE_PROJECT_MAPBOX_DOWNLOADS_TOKEN: ${{ secrets.MAPBOX_DOWNLOADS_TOKEN }}
+        run: ./gradlew lintPlaystoreDebug --stacktrace
+
+      - name: Upload lint report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: android-lint-report
+          path: |
+            build/reports/lint-results-playstoreDebug.html
+          if-no-files-found: ignore
+
+  unit-tests:
+    name: Unit tests (JVM)
+    runs-on: ubuntu-latest
+    # Same secret requirement as the lint job: the module has to compile before its unit
+    # tests can run, and fork/Dependabot PRs do not receive repo secrets.
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      # 21, not 17 like the lint job. src/test/resources/robolectric.properties pins
+      # Robolectric to sdk=37, and Robolectric refuses to build a sandbox for SDK 37 on
+      # anything below Java 21:
+      #   Failed to create a Robolectric sandbox: Android SDK 37 requires Java 21 (have Java 17)
+      # The pin is deliberate -- it has to match the single android-all jar that
+      # stageRobolectricSdk places -- so the JDK moves rather than the SDK level.
+      - name: Set up JDK 21
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Clear Android SDK cache
+        run: |
+          rm -rf /usr/local/lib/android/sdk/cmdline-tools
+          rm -rf ~/android-sdk
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v4
+        with:
+          # The action's default package list is "tools platform-tools", but Google has
+          # removed the legacy "tools" package from the SDK repository: sdkmanager fails to
+          # find it, exits 1, and this job dies in setup before Gradle ever runs. Ask for
+          # platform-tools only -- AGP resolves the platform and build-tools it needs by
+          # itself. Kept identical to the lint job above, which hit this first.
+          packages: platform-tools
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v6
+
+      - name: Write google-services.json
+        env:
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+        run: |
+          if [ -n "$GOOGLE_SERVICES_JSON" ]; then
+            printf '%s' "$GOOGLE_SERVICES_JSON" > google-services.json
+            echo "Wrote google-services.json from secret."
+          else
+            echo "::warning::GOOGLE_SERVICES_JSON secret is not set; the tests will fail at processGoogleServices."
+          fi
+
+      - name: Write EndPointConfig.java
+        env:
+          ENDPOINT_CONFIG_JAVA: ${{ secrets.ENDPOINT_CONFIG_JAVA }}
+        run: |
+          if [ -n "$ENDPOINT_CONFIG_JAVA" ]; then
+            printf '%s' "$ENDPOINT_CONFIG_JAVA" > src/main/java/com/glaciersecurity/glaciermessenger/EndPointConfig.java
+            echo "Wrote EndPointConfig.java from secret."
+          else
+            echo "::warning::ENDPOINT_CONFIG_JAVA secret is not set; the tests will fail at compile time."
+          fi
+
+      - name: Run JVM unit tests
+        env:
+          ORG_GRADLE_PROJECT_MAPBOX_DOWNLOADS_TOKEN: ${{ secrets.MAPBOX_DOWNLOADS_TOKEN }}
+        # Flavour-qualified: the distribution dimension makes a bare testDebugUnitTest
+        # not exist.
+        #
+        # -PcoverageReport attaches the JaCoCo agent, which writes build/jacoco/*.exec as the
+        # tests run. The reports themselves are built in the next step rather than by naming
+        # the jacoco*Report tasks here -- see there for why that separation is load-bearing.
+        run: |
+          ./gradlew testPlaystoreDebugUnitTest \
+            -PcoverageReport --stacktrace
+
+      # Separate from the test run, and excluding the very tasks it reads from, because the
+      # jacoco*Report tasks dependsOn the test tasks: when a test fails, Gradle skips
+      # everything downstream of it, so no report was written for exactly the run whose
+      # partial coverage is most worth looking at. (A finalizedBy does not help -- Gradle
+      # also skips a finalizer whose own dependency failed.) By then the agent has already
+      # written the .exec, so -x on the test tasks lets the report be built from it.
+      #
+      # If there is no .exec at all -- a compile failure, say -- the task simply produces
+      # nothing and still exits 0.
+      #
+      # Coverage is measured and published, not enforced: there is no threshold here and the
+      # job does not fail on the number. See the JaCoCo block in build.gradle for why.
+      - name: Generate coverage report
+        if: always()
+        env:
+          ORG_GRADLE_PROJECT_MAPBOX_DOWNLOADS_TOKEN: ${{ secrets.MAPBOX_DOWNLOADS_TOKEN }}
+        run: |
+          ./gradlew jacocoPlaystoreDebugReport \
+            -PcoverageReport --stacktrace \
+            -x testPlaystoreDebugUnitTest
+
+      # src/androidTest is 10 classes that only run on a device, and nothing in CI used to
+      # look at them at all -- so a rename in src/main could break the instrumented tier and
+      # stay broken until somebody ran a fleet by hand, which is not part of any routine
+      # check. Assembling the test APK type-checks all of it against the app it tests, on the
+      # runner, with no emulator and no extra tooling. It does not execute a single test:
+      # that still needs the managed-device tasks in src/androidTest/README.md.
+      - name: Compile instrumented tests
+        env:
+          ORG_GRADLE_PROJECT_MAPBOX_DOWNLOADS_TOKEN: ${{ secrets.MAPBOX_DOWNLOADS_TOKEN }}
+        run: ./gradlew assemblePlaystoreDebugAndroidTest --stacktrace
+
+      - name: Upload test report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: unit-test-report
+          path: |
+            build/reports/tests/testPlaystoreDebugUnitTest
+          if-no-files-found: ignore
+
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: unit-test-coverage
+          # HTML to read, XML for whatever reads coverage next (a diff-coverage gate, a PR
+          # annotation). Kept in its own artifact so the test report stays small.
+          path: |
+            build/reports/jacoco/jacocoPlaystoreDebugReport
+          if-no-files-found: ignore
+
+  app-build:
+    name: App build (debug APK)
+    runs-on: ubuntu-latest
+    # Same secret requirement as the two jobs above.
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      # 17, like the lint job. Only Robolectric needs 21, and no test runs here.
+      - name: Set up JDK 17
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Clear Android SDK cache
+        run: |
+          rm -rf /usr/local/lib/android/sdk/cmdline-tools
+          rm -rf ~/android-sdk
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v4
+        with:
+          # See the lint job: the action's default package list asks for the legacy "tools"
+          # package, which Google has removed, and sdkmanager exits 1 before Gradle runs.
+          packages: platform-tools
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v6
+
+      - name: Write google-services.json
+        env:
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+        run: |
+          if [ -n "$GOOGLE_SERVICES_JSON" ]; then
+            printf '%s' "$GOOGLE_SERVICES_JSON" > google-services.json
+            echo "Wrote google-services.json from secret."
+          else
+            echo "::warning::GOOGLE_SERVICES_JSON secret is not set; the build will fail at processGoogleServices."
+          fi
+
+      - name: Write EndPointConfig.java
+        env:
+          ENDPOINT_CONFIG_JAVA: ${{ secrets.ENDPOINT_CONFIG_JAVA }}
+        run: |
+          if [ -n "$ENDPOINT_CONFIG_JAVA" ]; then
+            printf '%s' "$ENDPOINT_CONFIG_JAVA" > src/main/java/com/glaciersecurity/glaciermessenger/EndPointConfig.java
+            echo "Wrote EndPointConfig.java from secret."
+          else
+            echo "::warning::ENDPOINT_CONFIG_JAVA secret is not set; the build will fail at compile time."
+          fi
+
+      # Packages the app, which nothing else here does. The lint and unit-test jobs compile
+      # the module, and the instrumented-test APK step pulls in the app's javac, manifest
+      # merge and resource merge -- but all three stop short of the app's own dex and package
+      # steps. This is what covers checkPlaystoreDebugDuplicateClasses (two dependencies
+      # providing the same class, the usual way a version bump breaks a build),
+      # dexBuilderPlaystoreDebug, mergeExtDexPlaystoreDebug, the desugaring in
+      # l8DexDesugarLibPlaystoreDebug, asset merging and packagePlaystoreDebug.
+      #
+      # The APK is deliberately not uploaded. It would carry the contents of
+      # EndPointConfig.java and google-services.json into a downloadable artifact, and this
+      # job exists to answer "does it still build", not to distribute builds.
+      - name: Assemble the debug APK
+        env:
+          # build.gradle reads project.properties["MAPBOX_DOWNLOADS_TOKEN"];
+          # ORG_GRADLE_PROJECT_* exposes it as a Gradle project property.
+          ORG_GRADLE_PROJECT_MAPBOX_DOWNLOADS_TOKEN: ${{ secrets.MAPBOX_DOWNLOADS_TOKEN }}
+        run: ./gradlew assemblePlaystoreDebug --stacktrace
+
+      # Debug builds skip R8, so nothing above sees what it strips. Native libraries look some
+      # Java classes up by name, invisible to R8; webrtc 149 shipped a release build that aborted
+      # on every call this way. Runs R8 only (no signing key needed), then fails if a class named
+      # in a packaged .so was removed or renamed. One flavour, for the same reason as above.
+      - name: Check R8 kept the classes native code loads by name
+        env:
+          ORG_GRADLE_PROJECT_MAPBOX_DOWNLOADS_TOKEN: ${{ secrets.MAPBOX_DOWNLOADS_TOKEN }}
+        run: ./gradlew checkPlaystoreReleaseNativeClassKeeps --stacktrace

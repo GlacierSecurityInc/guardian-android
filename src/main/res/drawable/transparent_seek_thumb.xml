@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Invisible, minimal-size thumb so the voice-message SeekBar keeps its default drag/seek
+     behavior and accessibility support without drawing a visible handle over the waveform. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="oval">
+    <size android:width="4dp" android:height="4dp" />
+    <solid android:color="@android:color/transparent" />
+</shape>

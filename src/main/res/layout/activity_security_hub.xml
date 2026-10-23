@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+<LinearLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.appbar.MaterialToolbar style="@style/BlackToolbar"
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="?attr/actionBarSize"
+            app:title="@string/title_activity_security_hub" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <include  android:id="@+id/offline_layout"
+        layout="@layout/toolbar_connection"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:visibility="gone" />
+
+    <include  android:id="@+id/return_to_external_call"
+        layout="@layout/external_call"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:visibility="gone" />
+
+    <include  android:id="@+id/return_to_glacier_call"
+        layout="@layout/view_incall_bar"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:visibility="gone" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+ <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_marginBottom="@dimen/footerBarSize">
+     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+         android:id="@+id/swipeRefreshLayout"
+         android:layout_width="match_parent"
+         android:layout_height="match_parent">
+
+     <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/activity_horizontal_margin">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <FrameLayout
+                        android:id="@+id/no_issues_image_wrapper"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/security_hub_top_margin"
+                        android:layout_marginBottom="8dp">
+
+
+                        <com.makeramen.roundedimageview.RoundedImageView
+                            android:id="@+id/issues_icon"
+                            android:layout_width="@dimen/security_hub_icon_size"
+                            android:layout_height="@dimen/security_hub_icon_size"
+                            android:src="@drawable/box_icon_warning" />
+
+
+                    </FrameLayout>
+
+
+                    <TextView
+                        android:id="@+id/issues_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:text="@string/no_issues_found"
+                        android:textAlignment="center"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        />
+
+
+                    <TextView
+                        android:id="@+id/security_hub_about"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="16dp"
+                        android:text="@string/security_hub_message"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="8dp"
+                        android:scrollbars="vertical"
+                        android:scrollingCache="true" />
+
+                </LinearLayout>
+            </LinearLayout>
+     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+
+        </LinearLayout>
+
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+                android:id="@+id/navigation_conversations"
+                android:transitionName="bottomNav"
+                style="@style/BlackBottomNav"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/footerBarSize"
+                android:layout_alignParentBottom="true"
+                android:layout_gravity="bottom"
+                app:itemIconTint="@color/color_state_light"
+                app:itemTextColor="@color/color_state_light"
+                app:menu="@menu/menu_bottom_navigation_conversations" />
+
+
+    </RelativeLayout>
+
+
+
+</LinearLayout>
+</layout>

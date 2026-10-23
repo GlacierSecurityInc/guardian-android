@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:icon="@drawable/pen"
+        android:id="@+id/action_signature"
+        android:title="@string/pdf_sign"
+        app:showAsAction="ifRoom"
+        android:visible="false"/>
+
+    <item
+        android:icon="@drawable/export"
+        android:id="@+id/action_share_signed"
+        android:title="@string/pdf_signature_share"
+        app:showAsAction="ifRoom" />
+</menu>

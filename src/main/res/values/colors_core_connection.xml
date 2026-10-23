@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Core Connection — modernized design tokens (light).
+  Derived from the Glacier 2026 design system (connection-screen.jsx).
+  Dark overrides live in values-night/colors_core_connection.xml.
+-->
+<resources>
+    <!-- surfaces -->
+    <color name="cc_bg">#FFFFFF</color>
+    <color name="cc_surface">#F3F4F7</color>
+    <color name="cc_raised">#F7F8FB</color>
+    <color name="cc_border">#170D0E12</color>
+    <color name="cc_border_strong">#260D0E12</color>
+
+    <!-- type -->
+    <color name="cc_text">#0D0E12</color>
+    <color name="cc_muted">#9E0D0E12</color>
+    <color name="cc_dim">#6B0D0E12</color>
+
+    <!-- accent / semantic -->
+    <color name="cc_accent">#3A5FD9</color>
+    <color name="cc_accent_soft">#243A5FD9</color>
+    <color name="cc_accent_ink">#FFFFFF</color>
+    <color name="text_color">#000000</color>
+
+    <color name="cc_connecting">#3A5FD9</color>
+    <color name="cc_green">#1F9D57</color>
+    <color name="cc_green_soft">#221F9D57</color>
+    <color name="cc_green_glow">#331F9D57</color>
+    <color name="cc_on_green">#FFFFFF</color>
+    <color name="cc_danger">#E07B6E</color>
+    <color name="cc_danger_soft">#24E07B6E</color>
+    <color name="cc_on_danger">#FFFFFF</color>
+    <color name="cc_amber">#C2840E</color>
+
+    <!-- disc gradients -->
+    <color name="cc_disc_on_top">#E6F7EE</color>
+    <color name="cc_disc_on_bottom">#D2F0E0</color>
+    <color name="cc_disc_off_top">#F3F4F7</color>
+    <color name="cc_disc_off_bottom">#E8EAEF</color>
+
+    <!-- power glyph / button ink on accent fills -->
+    <color name="cc_on_accent">#FFFFFF</color>
+
+    <!-- inactive ring + track -->
+    <color name="cc_ring_idle">#240D0E12</color>
+    <color name="cc_track_idle">#0F0D0E12</color>
+</resources>

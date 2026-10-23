@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application>
+        <!--
+            Present only in debug builds. An activity declared in the androidTest source set
+            belongs to the test APK and resolves to its package, which the instrumentation's
+            target process cannot launch; declaring it here puts it in the app itself where
+            ActivityScenario can reach it. Not exported, and absent from release.
+        -->
+        <activity
+            android:name="com.glaciersecurity.glaciermessenger.ui.util.WindowFlagsProbeActivity"
+            android:exported="false" />
+
+        <!--
+            Debug-only control surface for FakeGlacierBackend: lets adb switch an endpoint to a
+            failure scenario mid-session. Exported so `am broadcast` can reach it; absent from
+            release builds, where the fake backend does not exist either.
+        -->
+        <receiver
+            android:name="com.glaciersecurity.glaciermessenger.http.fake.FakeBackendReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.glaciersecurity.glaciermessenger.FAKE_BACKEND" />
+            </intent-filter>
+        </receiver>
+
+    </application>
+
+</manifest>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:doap="http://usefulinc.com/ns/doap#"
+    xmlns:foaf="http://xmlns.com/foaf/0.1/">
+  <doap:Project>
+    <doap:name>Guardian by Glacier</doap:name>
+    <doap:shortdesc xml:lang="en">Secure Android communications app.</doap:shortdesc>
+    <doap:description xml:lang="en">
+      Guardian is an Android messaging application focused on private, encrypted team communication.
+    </doap:description>
+    <doap:homepage rdf:resource="https://glacier.chat/pro"/>
+    <doap:programming-language>Java</doap:programming-language>
+    <doap:os>Android</doap:os>
+    <doap:license rdf:resource="https://www.gnu.org/licenses/gpl-3.0.html"/>
+    <doap:maintainer>
+      <foaf:Person>
+        <foaf:name>Glacier Security</foaf:name>
+      </foaf:Person>
+    </doap:maintainer>
+  </doap:Project>
+</rdf:RDF>

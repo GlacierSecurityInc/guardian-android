@@ -1,0 +1,4 @@
+# Deliberately fake JWT test fixture: payload {"sub":"guardian"}, signature is the literal
+# word "signature". Not a credential.
+src/main/java/com/glaciersecurity/glaciermessenger/http/fake/FakeTenant.java:jwt:94
+src/test/java/com/glaciersecurity/glaciermessenger/utils/TwilioAccessTokenParserTest.java:jwt:15

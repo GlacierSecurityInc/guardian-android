@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_ongoing_call"
+        android:icon="@drawable/ic_phone_in_talk_24dp"
+        android:orderInCategory="9"
+        android:title="@string/return_to_ongoing_call"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_call"
+        android:icon="@drawable/ic_call_24dp"
+        android:orderInCategory="10"
+        android:title="@string/make_call"
+        app:showAsAction="always">
+        <menu>
+            <item
+                android:id="@+id/action_audio_call"
+                android:icon="@drawable/ic_call_24dp"
+                android:title="@string/audio_call" />
+            <item
+                android:id="@+id/action_video_call"
+                android:icon="@drawable/ic_videocam_24dp"
+                android:title="@string/video_call" />
+        </menu>
+    </item>
+    <item
+        android:id="@+id/action_security"
+        android:icon="@drawable/ic_lock_open_outline_24dp"
+        android:orderInCategory="20"
+        android:title="@string/encrypted_with_omemo"
+        app:showAsAction="always">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/encryption_choice_none"
+                    android:title="@string/encryption_choice_unencrypted" />
+                <item
+                    android:id="@+id/encryption_choice_axolotl"
+                    android:title="@string/encryption_choice_omemo" />
+                <item
+                    android:id="@+id/encryption_choice_pgp"
+                    android:title="@string/encryption_choice_pgp" />
+            </group>
+        </menu>
+    </item>
+    <item android:id="@+id/action_message_timer"
+        android:orderInCategory="74"
+        android:title="@string/message_timer"
+        android:icon="@drawable/baseline_timer_24"
+        app:showAsAction="ifRoom" />
+
+    <!-- Group 1: navigation / informational items -->
+    <group
+        android:id="@+id/overflow_group_info"
+        android:orderInCategory="40">
+        <item
+            android:id="@+id/action_contact_details"
+            android:icon="@drawable/baseline_info_outline_24"
+            android:orderInCategory="40"
+            android:title="@string/action_contact_details"
+            app:showAsAction="never" />
+        <item
+            android:id="@+id/action_muc_details"
+            android:icon="@drawable/ic_group_24dp"
+            android:orderInCategory="41"
+            android:title="@string/action_muc_details"
+            app:showAsAction="never" />
+        <item
+            android:id="@+id/action_invite"
+            android:icon="@drawable/ic_person_add_24dp"
+            android:orderInCategory="45"
+            android:title="@string/invite_contact"
+            app:showAsAction="never" />
+        <item
+            android:id="@+id/action_search"
+            android:icon="@drawable/ic_search_24dp"
+            android:orderInCategory="48"
+            android:title="@string/search_messages"
+            android:visible="@bool/show_individual_search_options"
+            app:showAsAction="never" />
+    </group>
+
+    <!-- Group 2: destructive action (shown with divider above) -->
+    <group
+        android:id="@+id/overflow_group_destructive"
+        android:orderInCategory="50">
+        <item
+            android:id="@+id/action_clear_history"
+            android:icon="@drawable/ic_delete_24dp"
+            android:orderInCategory="50"
+            android:title="@string/action_clear_history"
+            app:showAsAction="never" />
+
+        <item
+            android:id="@+id/action_archive"
+            android:icon="@drawable/ic_archive_24dp"
+            android:orderInCategory="60"
+            android:title="@string/action_archive_chat"
+            app:showAsAction="never" />
+        <item
+            android:id="@+id/action_leave_muc"
+            android:icon="@drawable/ic_logout_24dp"
+            android:orderInCategory="52"
+            android:title="@string/action_leave_group"
+            app:showAsAction="never" />
+    </group>
+
+    <!-- Group 3: conversation management -->
+    <group
+        android:id="@+id/overflow_group_manage"
+        android:orderInCategory="60">
+
+        <item
+            android:id="@+id/action_mute"
+            android:icon="@drawable/ic_notifications_off_24dp"
+            android:orderInCategory="71"
+            android:title="@string/disable_notifications"
+            app:showAsAction="never" />
+        <item
+            android:id="@+id/action_unmute"
+            android:icon="@drawable/ic_notifications_24dp"
+            android:orderInCategory="72"
+            android:title="@string/enable_notifications"
+            app:showAsAction="never" />
+        <item
+            android:id="@+id/action_toggle_pinned"
+            android:icon="@drawable/ic_push_pin_24dp"
+            android:orderInCategory="73"
+            android:title="@string/add_to_favorites"
+            app:showAsAction="never" />
+    </group>
+
+</menu>

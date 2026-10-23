@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+        <ListPreference
+            android:defaultValue="@string/region_roaming"
+            android:entries="@array/external_call_regions"
+            android:entryValues="@array/external_call_regions_values"
+            android:key="phone"
+            android:icon="@drawable/baseline_alt_route_24"
+            android:summary="@string/call_routing_description_pref"
+            android:title="@string/call_routing_title_pref"/>
+        <CheckBoxPreference
+            android:defaultValue="@bool/enable_phone_history"
+            android:icon="@drawable/baseline_history_pref_24"
+            android:key="phone_history"
+            app:isPreferenceVisible="false"
+            android:summary="@string/pref_phone_history_description"
+            android:title="@string/pref_phone_history" />
+
+
+</PreferenceScreen>

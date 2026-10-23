@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_support"
+        android:orderInCategory="110"
+        android:icon="@drawable/baseline_contact_support_24"
+        app:showAsAction="ifRoom"
+        android:title="@string/action_support"/>
+</menu>

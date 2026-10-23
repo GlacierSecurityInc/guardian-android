@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+        <Preference
+            android:key="info_block"
+            android:title=""
+            android:summary="@string/location_permission_explain"
+            android:selectable="false"
+            />
+        <Preference
+            android:icon="@drawable/ic_location_target"
+            android:key="send_location_manually"
+            app:summary="@string/mapping_manual_pref"
+            app:title="@string/mapping_mapping_pref" />
+
+        <SwitchPreferenceCompat
+            android:defaultValue="@bool/live_location_tracking"
+            android:icon="@drawable/baseline_location_on_24"
+            android:key="live_location_tracking"
+            android:summary="@string/pref_live_location_activity_summary"
+            android:title="@string/pref_live_location_activity" />
+
+        <SwitchPreferenceCompat
+            app:isPreferenceVisible="false"
+            android:defaultValue="@bool/allow_contacts_see_location"
+            android:icon="@drawable/ic_group_24dp"
+            android:key="allow_contacts_see_location"
+            android:summary="@string/pref_allow_contacts_see_location_summary"
+            android:title="@string/pref_allow_contacts_see_location" />
+</PreferenceScreen>

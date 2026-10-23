@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Neue Haas Grotesk Text family — the app's default typeface (set on the
+  base AppTheme, light and dark). Roman (55) is the normal weight; Medium
+  (65) is mapped to the bold slot so existing android:textStyle="bold"
+  views render with the real Medium face instead of a synthetic bold.
+  No italic face was supplied, so android:textStyle="italic" views fall
+  back to the platform's synthetic (skewed) italic of the Roman face.
+
+  Both the framework (android:) and AppCompat (app:) attributes are
+  declared so the family resolves whichever parser loads it.
+-->
+<font-family
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <font
+        android:fontStyle="normal"
+        android:fontWeight="400"
+        android:font="@font/neue_haas_grotesk_roman"
+        app:fontStyle="normal"
+        app:fontWeight="400"
+        app:font="@font/neue_haas_grotesk_roman" />
+    <font
+        android:fontStyle="normal"
+        android:fontWeight="700"
+        android:font="@font/neue_haas_grotesk_medium"
+        app:fontStyle="normal"
+        app:fontWeight="700"
+        app:font="@font/neue_haas_grotesk_medium" />
+</font-family>

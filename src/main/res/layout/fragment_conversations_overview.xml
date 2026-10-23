@@ -1,0 +1,271 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <!-- Direction B list header: search pill + filter chips -->
+            <LinearLayout
+                android:id="@+id/list_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <!-- Unread summary subtitle -->
+                <TextView
+                    android:id="@+id/unread_summary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="2dp"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:textSize="13sp"
+                    android:visibility="gone" />
+
+                <!-- Search bar pill -->
+                <LinearLayout
+                    android:id="@+id/search_bar"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="12dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="2dp"
+                    android:background="@drawable/bg_search_pill"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="6dp">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_search_24dp"
+                        app:tint="?attr/colorOnSurfaceVariant" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:layout_weight="1"
+                        android:ellipsize="end"
+                        android:singleLine="true"
+                        android:text="@string/search_messages_contacts"
+                        android:textColor="?attr/colorOnSurfaceVariant"
+                        android:textSize="15sp" />
+
+                    <ImageView
+                        android:id="@+id/search_filter"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:importantForAccessibility="no"
+                        android:padding="8dp"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/ic_tune_24dp" />
+                </LinearLayout>
+
+                <!-- Filter chips: sort by All / Unread / Groups -->
+                <HorizontalScrollView
+                    android:id="@+id/filter_bar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fillViewport="true"
+                    android:scrollbars="none">
+
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/filter_chip_group"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:paddingTop="6dp"
+                        android:paddingBottom="6dp"
+                        app:chipSpacingHorizontal="8dp"
+                        app:selectionRequired="true"
+                        app:singleLine="true"
+                        app:singleSelection="true">
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_all"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="true"
+                            android:text="@string/filter_all"
+                            android:textColor="@color/chip_filter_text"
+                            app:checkedIconVisible="false"
+                            app:chipBackgroundColor="@color/chip_filter_background"
+                            app:chipStrokeColor="@color/chip_filter_stroke"
+                            app:chipStrokeWidth="1dp" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_unread"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/filter_unread"
+                            android:textColor="@color/chip_filter_text"
+                            app:checkedIconVisible="false"
+                            app:chipBackgroundColor="@color/chip_filter_background"
+                            app:chipStrokeColor="@color/chip_filter_stroke"
+                            app:chipStrokeWidth="1dp" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_groups"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/filter_groups"
+                            android:textColor="@color/chip_filter_text"
+                            app:checkedIconVisible="false"
+                            app:chipBackgroundColor="@color/chip_filter_background"
+                            app:chipStrokeColor="@color/chip_filter_stroke"
+                            app:chipStrokeWidth="1dp" />
+                    </com.google.android.material.chip.ChipGroup>
+                </HorizontalScrollView>
+            </LinearLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/list"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scrollbars="vertical" />
+
+                <include
+                    android:id="@+id/empty_list"
+                    layout="@layout/empty_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone" />
+
+                <include
+                    android:id="@+id/loading_list"
+                    layout="@layout/loading_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/empty_filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                    android:textColor="?android:textColorSecondary"
+                    android:visibility="gone" />
+
+
+            </FrameLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="end|bottom"
+            >
+
+            <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                android:id="@+id/phone_sync"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|bottom"
+                android:text="@string/sync_phone"
+                android:layout_margin="16dp"
+
+                android:textColor="@android:color/white"
+                android:backgroundTint="@color/glacier_button"
+                app:icon="@drawable/ic_phone_24dp"
+                app:iconTint="@android:color/white"
+                android:visibility="gone"/>
+
+
+            <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/sync"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:text="@string/sync_db"
+            android:layout_margin="16dp"
+
+            android:textColor="@android:color/white"
+            android:backgroundTint="@color/glacier_button"
+            app:icon="@drawable/ic_cloud_sync_24dp"
+            app:iconTint="@android:color/white"
+                android:visibility="gone"/>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <!-- Shown when a conversation moves to the top of the list (new message)
+                 while the user has scrolled away from it. Tapping scrolls back to top. -->
+            <RelativeLayout
+                android:id="@+id/new_conversations_indicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:visibility="gone">
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/scroll_to_top_button"
+                    style="?attr/floatingActionButtonSmallSurfaceStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/scroll_to_top"
+                    android:src="@drawable/baseline_keyboard_double_arrow_up_24"
+                    app:useCompatPadding="true" />
+
+                <com.glaciersecurity.glaciermessenger.ui.widget.UnreadCountCustomView
+                    android:id="@+id/new_conversations_count"
+                    android:layout_width="18sp"
+                    android:layout_height="18sp"
+                    android:layout_alignTop="@id/scroll_to_top_button"
+                    android:layout_alignEnd="@id/scroll_to_top_button"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="8dp"
+                    android:elevation="8dp"
+                    android:visibility="gone"
+                    app:backgroundColor="?colorTertiaryContainer"
+                    app:textColor="?colorOnTertiaryContainer"
+                    tools:ignore="RtlCompat" />
+            </RelativeLayout>
+
+            <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                android:id="@+id/fab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:text="@string/start_chat"
+                android:textColor="@android:color/white"
+                android:backgroundTint="@color/glacier_button"
+                app:icon="@drawable/ic_chat_24dp"
+                app:iconTint="@android:color/white"
+                />
+        </LinearLayout>
+        </LinearLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>

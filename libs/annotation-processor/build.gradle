@@ -1,0 +1,35 @@
+apply plugin: "java-library"
+
+ext.guavaVersion = '33.6.0-jre'
+
+repositories {
+    google()
+    mavenCentral()
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+dependencies {
+
+    implementation project(':libs:annotation')
+
+    annotationProcessor 'com.google.auto.service:auto-service:1.1.1'
+    api 'com.google.auto.service:auto-service-annotations:1.1.1'
+    implementation "com.google.guava:guava:${guavaVersion}"
+
+}
+
+// Raises auto-service's older transitive guava to the version declared above. The rule
+// applies to the direct declaration too, so both read guavaVersion rather than a literal --
+// otherwise editing the declaration would change the manifest without changing what resolves.
+// -jre is correct here and must stay: this is a java-library that runs inside the build JVM
+// as an annotation processor and never reaches the APK. The app module pins -android.
+configurations.configureEach {
+    resolutionStrategy.eachDependency { details ->
+        if (details.requested.group == 'com.google.guava' && details.requested.name == 'guava') {
+            details.useVersion guavaVersion
+        }
+    }
+}
