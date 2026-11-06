@@ -43,40 +43,15 @@ Two Gradle properties are also required, normally set in `~/.gradle/gradle.prope
 - A `keystore.properties` file in the project root (`storeFile`, `storePassword`,
   `keyAlias`, `keyPassword`) if you intend to produce signed release builds
 
-### Build
-
-```bash
-./gradlew assembleDebug
-```
-
-### Run
-
-Open the project in Android Studio and run the **app** configuration on an emulator or device.
-
 ## Repository structure
 
 - `src/` — Android app source code
 - `docs/` — Developer documentation
 - `libs/` — Local annotation processor modules
 
-## Contributing
-
-1. Create a feature branch from the current development branch.
-2. Keep changes focused and documented.
-3. Run relevant tests before submitting a pull request.
-4. Install the secret-scanning hooks once: `pip install pre-commit && pre-commit install`.
-   They run Gitleaks and TruffleHog on every commit (the TruffleHog hook needs the
-   `trufflehog` binary on your `PATH`).
-
-Note that the build, lint and test workflows in `.github/workflows/` depend on
-repository secrets that are not available to forks, so those jobs will not succeed
-on a forked pull request. The secret scan (`secret-scan.yml`) needs no secrets and
-runs on every pull request.
-
 ## Security
 
-Please do not open public issues for security problems. Use GitHub's private
-vulnerability reporting under the **Security** tab, or email
+Use GitHub's private vulnerability reporting under the **Security** tab, or email
 **support@glacier.chat** with `SECURITY` in the subject.
 
 See [SECURITY.md](SECURITY.md) for supported versions, scope, and what to include
